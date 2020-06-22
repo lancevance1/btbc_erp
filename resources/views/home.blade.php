@@ -13,11 +13,14 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    You are logged in!
+                        {{$user->name}} You are logged in!
                 </div>
             </div>
         </div>
+    </div>
+{{--    {{$name ?? ''}}--}}
+    <div class="row">
+        <div class="col-3"></div>
     </div>
 </div>
 @endsection

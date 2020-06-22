@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <div><img src="svg/wine.svg" alt="wine icon" width="25" height="25">
+                    <div><img src="{{ URL::to('/') }}/svg/wine.svg" alt="wine icon" width="25" height="25">
                     {{ config('app.name', 'Laravel') }}</div>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
