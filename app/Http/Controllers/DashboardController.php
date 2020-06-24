@@ -10,7 +10,7 @@ class DashboardController extends Controller
     public function index($user)
     {
 
-        $tmp = User::find($user);
-        return view('home', ['user' => $tmp]);
+        $tmp = User::findOrFail($user);
+        return view('dashboard.index', ['user' => $tmp]);
     }
 }

@@ -15,12 +15,18 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+
             $table->string('order number',255);
             $table->string('wine code',255)->nullable();
             $table->integer('run number');
             $table->timestamps();
+
+
         });
+
+
     }
+
 
     /**
      * Reverse the migrations.

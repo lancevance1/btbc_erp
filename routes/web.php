@@ -21,4 +21,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard/{user}', 'DashboardController@index')->name('dashboard.show');
+Route::get('/order/create', 'OrdersController@create');
+Route::post('/p','OrdersController@store');
 //Route::redirect('/dashboard/{user}', '/home');
