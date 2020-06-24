@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    public function bottle()
+    public function product()
     {
-        return $this->belongsTo(Product::class);
-   }
+        return $this->belongsToMany('App\Product')
+            ->withTimestamps()
+            ->withPivot('quantity');
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +19,6 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'order number', 'run Number','wine code',
+        'order_number', 'run_number','wine_code',
     ];
 }

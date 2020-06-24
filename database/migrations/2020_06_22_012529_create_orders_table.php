@@ -16,9 +16,9 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            $table->string('order number',255);
-            $table->string('wine code',255)->nullable();
-            $table->integer('run number');
+            $table->string('order_number',255);
+            $table->string('wine_code',255)->nullable();
+            $table->integer('run_number');
             $table->timestamps();
 
 

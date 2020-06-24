@@ -6,8 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    public function orders()
+    public function order()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsToMany('App\Order')
+            ->withTimestamps()
+            ->withPivot('quantity');
     }
+    protected $fillable = [
+        'code',
+    ];
+
 }
