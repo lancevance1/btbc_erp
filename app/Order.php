@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    public function product()
+    public function products()
     {
         return $this->belongsToMany('App\Product')
             ->withTimestamps()

@@ -1,8 +1,9 @@
 @extends('layouts.app')
+@section('title', 'Create Order')
 
 @section('content')
     <div class="container">
-        <form action="/p" enctype="multipart/form-data" method="post">
+        <form action="/orders" enctype="multipart/form-data" method="post">
             @csrf
             <div class="row">
                 <div class="col-8 offset-2">
@@ -51,8 +52,9 @@
                     </div>
 
                     <div class="row">
-                        <button class="btn btn-primary">Submit</button>
+                        <button class="btn btn-primary" >Submit</button>
                     </div>
+
                 </div>
             </div>
         </form>

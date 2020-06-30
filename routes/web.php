@@ -19,8 +19,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home.index');
 Route::get('/dashboard/{user}', 'DashboardController@index')->name('dashboard.show');
-Route::get('/order/create', 'OrderController@create');
-Route::post('/p','OrderController@store');
+Route::get('/orders/create', 'OrderController@create')->name('orders.show');
+Route::post('/orders','OrderController@store')->name('orders.store');
+Route::get('/orders/{order}','OrderController@show')->name('orders.show');
 //Route::redirect('/dashboard/{user}', '/home');
