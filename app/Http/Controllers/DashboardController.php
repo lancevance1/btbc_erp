@@ -9,17 +9,24 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index($user)
+    public function index()
     {
-
-        $tmp = User::findOrFail($user);
-        $total_orders = DB::table('orders')->count();
-        $orders = DB::table('orders')->take(10)
+        return view('dashboard.index');
+    }
+    public function show()
+    {
+        //Order::withTrashed()->restore();
+        //$tmp = User::findOrFail($user);
+        $total_orders = DB::table('orders')->whereNull('deleted_at')->count();
+        $orders = DB::table('orders')
+            ->whereNull('deleted_at')->take(10)
             ->orderBy('created_at','DESC')
             ->get();
+
+
+
         //dd($orders);
         return view('dashboard.index', [
-            'user' => $tmp,
             'orders' => $orders,
             'total_orders' => $total_orders,
         ]);

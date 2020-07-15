@@ -21,11 +21,11 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function index()
     {
-        return view('dashboard.index');
+        return redirect('dashboard/');
 //        $tmp = Order::create(['order number'=>'aaa123']);
 //        $prod = Product::create(['code'=>'122']);
 //        $tmp->save();

@@ -13,7 +13,8 @@ class Product extends Model
             ->withPivot('quantity');
     }
     protected $fillable = [
-        'code',
+        'code','price','description','type','size','cost','current_inventory','order_quantity',
+        'to_be_ordered', 'current_inventory_value','belong_to',
     ];
 
 }

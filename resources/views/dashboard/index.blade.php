@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Dashboard')
+
 
 
 @section('content')
@@ -10,7 +10,7 @@
                 <div class="card-header">
                     Welcome {{$user->name ?? ''}} <br/>
                     Dashboard<a href="/orders/create">new order</a>
-                    Total Orders: {{$total_orders}}
+                    Total Orders: {{$total_orders ?? ''}}
                 </div>
 
                 <div class="card-body">
@@ -24,17 +24,7 @@
 
 
 
-                        @foreach ($orders as $order)
-                            <a href="/orders/{{$order->id}}">
-                                <p>Order Number: {{ $order->order_number }}
-                                    Wine Code: {{ $order->wine_code }}
-                                    Run Number: {{ $order->run_number }}
-                                    Created at: {{ $order->created_at }}
-                                    Updated at: {{ $order->updated_at }}</p>
-                                <br/>
-                            </a>
 
-                        @endforeach
                 </div>
 
             </div>

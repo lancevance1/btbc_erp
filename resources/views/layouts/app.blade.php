@@ -23,10 +23,34 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <div><img src="{{ URL::to('/') }}/svg/wine.svg" alt="wine icon" width="25" height="25">
+                <a class="navbar-brand" href="{{ url('/') }}" >
+                    <div><img src="{{ URL::to('/') }}/svg/wine.svg" alt="wine icon" width="25" height="25" >
                     {{ config('app.name', 'Laravel') }}</div>
                 </a>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+{{--                        to remove hard coding "active"--}}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/dashboard">Dashboard </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/orders">Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/products">Dry Goods</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                {{-- search functionality start         --}}
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                {{-- search functionality end           --}}
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -82,5 +106,7 @@
             @yield('content')
         </main>
     </div>
+
+
 </body>
 </html>
