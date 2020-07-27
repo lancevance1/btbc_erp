@@ -23,17 +23,18 @@
                                     </span>
                         @enderror
 
-                        <label for="wine_code" class="col-md-4 col-form-label ">Wine Code</label>
-                        <input id="wine_code" type="text"
-                               class="form-control @error('wine_code') is-invalid @enderror"
-                               name="wine_code" value="{{ old('wine_code') }}"
-                               autocomplete="wine_code" autofocus>
 
-                        @error('wine_code')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
+{{--                        <label for="wine_code" class="col-md-4 col-form-label ">Wine Code</label>--}}
+{{--                        <input id="wine_code" type="text"--}}
+{{--                               class="form-control @error('wine_code') is-invalid @enderror"--}}
+{{--                               name="wine_code" value="{{ old('wine_code') }}"--}}
+{{--                               autocomplete="wine_code" autofocus>--}}
+
+{{--                        @error('wine_code')--}}
+{{--                        <span class="invalid-feedback" role="alert">--}}
+{{--                                        <strong>{{ $message }}</strong>--}}
+{{--                                    </span>--}}
+{{--                        @enderror--}}
 
                         <label for="run_number" class="col-md-4 col-form-label ">Run No.</label>
                         <input id="run_number" type="number"
@@ -43,6 +44,66 @@
                                placeholder="0000" max="9999" min="1000">
 
                         @error('run_number')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+
+                        <label for="COA" class="col-md-4 col-form-label ">COA</label>
+                        <select id="COA"
+                                class="form-control" name="COA">
+                                <option value='1'>
+                                    YES
+                                </option>
+                            <option value='0'>
+                                NO
+                            </option>
+                        </select>
+
+{{--                        <input id="COA" type="number"--}}
+{{--                               class="form-control @error('COA') is-invalid @enderror"--}}
+{{--                               name="COA" value="{{ old('COA') }}"--}}
+{{--                               autocomplete="COA" autofocus--}}
+{{--                               placeholder="0000" >--}}
+
+
+
+                        <label for="LIP" class="col-md-4 col-form-label ">LIP</label>
+                        <select id="LIP"
+                                class="form-control" name="LIP">
+
+
+                            <option value='1'>
+                                YES
+                            </option>
+                            <option value='0'>
+                                NO
+                            </option>
+
+                        </select>
+
+
+
+
+                        <label for="wine" class="col-md-4 col-form-label ">Wine</label>
+                        <select id="wine"
+                                class="form-control" name="wine">
+
+                            @foreach($wines as $product)
+                                <option value='{{$product->id}}'>
+                                    {{$product->code}}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <label for="quantity_wine" class="col-md-4 col-form-label ">Wine: Quantity</label>
+                        <input id="quantity_wine" type="number"
+                               class="form-control @error('quantity_wine') is-invalid @enderror"
+                               name="quantity_wine" value="{{ old('quantity_wine') }}"
+                               autocomplete="quantity_wine" autofocus>
+
+                        @error('quantity_wine')
                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

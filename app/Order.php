@@ -22,6 +22,6 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'order_number', 'run_number','wine_code',
+        'order_number', 'run_number','wine_code','COA','LIP',
     ];
 }

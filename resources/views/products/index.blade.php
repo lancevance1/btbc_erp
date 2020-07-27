@@ -23,7 +23,57 @@
 
 
 
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Type</th>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Cost</th>
+                                <th>Current Inventory</th>
+                                <th>Order Quantity</th>
+                                <th>To be ordered</th>
+                                <th>Current Inventory Value</th>
+                                <th>Belong to</th>
+                                <th>Created at</th>
+                                <th>Updated at</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($products ?? '' as $product)
 
+                                <tr>
+                                    <td>{{$product->id}}</td>
+                                    <td>{{$product->type}}</td>
+                                    <td>{{$product->code}}</td>
+                                    <td>{{$product->description}}</td>
+                                    <td>{{$product->price}}</td>
+                                    <td>{{$product->cost}}</td>
+                                    <td>{{$product->current_inventory}}</td>
+                                    <td>{{$product->order_quantity}}</td>
+                                    <td>{{$product->to_be_ordered}}</td>
+                                    <td>{{$product->current_inventory_value}}</td>
+                                    <td>{{$product->belong_to}}</td>
+                                    <td>{{$product->created_at}}</td>
+                                    <td>{{$product->updated_at}}</td>
+                                    <td><form action="/products/{{$product->id}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-secondary">Delete {{$product->id}}</button>
+                                        </form>
+
+                                        </td>
+                                    <td>
+                                        <button onclick="location.href='/products/{{ $product->id}}/edit'"
+                                                type="button" class="btn btn-secondary">Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
 
                         @foreach ($products ?? '' as $product)
                             <form action="/products/{{$product->id}}" method="POST">

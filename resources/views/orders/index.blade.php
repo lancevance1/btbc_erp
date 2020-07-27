@@ -19,6 +19,8 @@
 
 
 
+
+
                         @foreach ($orders ?? '' as $order)
                             <form action="/orders/{{$order->id}}" method="POST">
                                 @csrf
@@ -29,6 +31,8 @@
                             <button onclick="location.href='/orders/{{ $order->id}}/edit'"
                                     type="button" class="btn btn-secondary">Edit
                             </button>
+
+                                <a href="{{action('OrderController@export',['id'=>$order->id])}}">Export</a>
 
                             <a href="/orders/{{$order->id}}">
                                 <p>Order Number: {{ $order->order_number }}
@@ -52,6 +56,11 @@
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-secondary" >Restore {{$tmp->id}}</button>
+                                </form>
+                                <form action="{{action('OrderController@forceDestroy',['id'=>$tmp->id])}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-secondary" >Permanently delete {{$tmp->id}}</button>
                                 </form>
                             @endforeach
                     </div>

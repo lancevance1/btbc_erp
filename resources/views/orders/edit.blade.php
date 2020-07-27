@@ -25,17 +25,18 @@
                                     </span>
                         @enderror
 
-                        <label for="wine_code" class="col-md-4 col-form-label ">Wine Code</label>
-                        <input id="wine_code" type="text"
-                               class="form-control @error('wine_code') is-invalid @enderror"
-                               name="wine_code" value="{{ old('wine_code') ??$order->wine_code }}"
-                                autocomplete="wine code" autofocus>
 
-                        @error('wine_code')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
+{{--                        <label for="wine_code" class="col-md-4 col-form-label ">Wine Code</label>--}}
+{{--                        <input id="wine_code" type="text"--}}
+{{--                               class="form-control @error('wine_code') is-invalid @enderror"--}}
+{{--                               name="wine_code" value="{{ old('wine_code') ??$order->wine_code }}"--}}
+{{--                                autocomplete="wine code" autofocus>--}}
+
+{{--                        @error('wine_code')--}}
+{{--                        <span class="invalid-feedback" role="alert">--}}
+{{--                                        <strong>{{ $message }}</strong>--}}
+{{--                                    </span>--}}
+{{--                        @enderror--}}
 
                         <label for="run_number" class="col-md-4 col-form-label ">Run No.</label>
                         <input id="run_number" type="number"
@@ -51,11 +52,78 @@
                         @enderror
 
 
+                        <label for="COA" class="col-md-4 col-form-label ">COA</label>
+                        <select id="COA"
+                                class="form-control" name="COA">
+                            @if($order->COA === 1)
+                                <option value='1'>
+                                    Old value: YES
+                                </option>
+                            @else
+                                <option value='0'>
+                                    Old value: NO
+                                </option>
+                            @endif
+                            <option value='1'>
+                                YES
+                            </option>
+                            <option value='0'>
+                                NO
+                            </option>
+                        </select>
+
+                        <label for="LIP" class="col-md-4 col-form-label ">LIP</label>
+                        <select id="LIP"
+                                class="form-control" name="LIP">
+                            @if($order->LIP === 1)
+                                <option value='1'>
+                                    Old value: YES
+                                </option>
+                            @else
+                                <option value='0'>
+                                    Old value: NO
+                                </option>
+                            @endif
+                            <option value='1'>
+                                YES
+                            </option>
+                            <option value='0'>
+                                NO
+                            </option>
+                        </select>
+
+                        <label for="wine" class="col-md-4 col-form-label ">Wine</label>
+                        <select id="wine"
+                                class="form-control" name="wine">
+                            <option value="{{ $current_wine->id ?? null }}">
+                                Old value: {{ $current_wine->code ?? null}}
+                            </option>
+                            @foreach($wines as $product)
+                                <option value='{{$product->id}}'>
+                                    {{$product->code}}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <label for="quantity_wine" class="col-md-4 col-form-label ">Wine: Quantity</label>
+                        <input id="quantity_wine" type="number"
+                               class="form-control @error('quantity_wine') is-invalid @enderror"
+                               name="quantity_wine" value="{{ old('quantity_wine') ??$current_wine->pivot->quantity ?? null}}"
+                               autocomplete="quantity_wine" autofocus>
+
+                        @error('quantity_wine')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+
+
                         <label for="bottle" class="col-md-4 col-form-label ">Bottle</label>
                         <select id="bottle"
                                 class="form-control" name="bottle">
-                            <option value="{{ $current_bottle->id }}">
-                                Old value: {{ $current_bottle->code }}
+                            <option value="{{ $current_bottle->id ?? null}}">
+                                Old value: {{ $current_bottle->code ?? null}}
                             </option>
                             @foreach($bottles as $product)
                                 <option value='{{$product->id}}'>
@@ -67,7 +135,8 @@
                         <label for="quantity_bottle" class="col-md-4 col-form-label ">Bottle: Quantity</label>
                         <input id="quantity_bottle" type="number"
                                class="form-control @error('quantity_bottle') is-invalid @enderror"
-                               name="quantity_bottle" value="{{ old('quantity_bottle') ??$current_bottle->pivot->quantity}}"
+                               name="quantity_bottle"
+                               value="{{ old('quantity_bottle') ??$current_bottle->pivot->quantity ?? null}}"
                                autocomplete="quantity_bottle" autofocus>
 
                         @error('quantity_bottle')
@@ -79,8 +148,8 @@
                         <label for="cork" class="col-md-4 col-form-label ">Cork</label>
                         <select id="cork"
                                 class="form-control" name="cork">
-                            <option value="{{ $current_cork->id }}">
-                                Old value: {{ $current_cork->code }}
+                            <option value="{{ $current_cork->id ?? null}}">
+                                Old value: {{ $current_cork->code ?? null}}
                             </option>
                             @foreach($corks as $product)
                                 <option value='{{$product->id}}'>
@@ -92,7 +161,7 @@
                         <label for="quantity_cork" class="col-md-4 col-form-label ">Cork: Quantity</label><input
                             id="quantity_cork" type="number"
                             class="form-control @error('quantity_cork') is-invalid @enderror"
-                            name="quantity_cork" value="{{ old('quantity_cork')??$current_cork->pivot->quantity }}"
+                            name="quantity_cork" value="{{ old('quantity_cork')??$current_cork->pivot->quantity ?? null}}"
                             autocomplete="quantity_cork" autofocus>
 
                         @error('quantity_cork')
@@ -104,8 +173,8 @@
                         <label for="capsule" class="col-md-4 col-form-label ">Capsule</label>
                         <select id="capsule"
                                 class="form-control" name="capsule">
-                            <option value="{{ $current_capsule->id }}">
-                                Old value: {{ $current_capsule->code }}
+                            <option value="{{ $current_capsule->id ?? null}}">
+                                Old value: {{ $current_capsule->code ?? null}}
                             </option>
                             @foreach($capsules as $product)
                                 <option value='{{$product->id}}'>
@@ -117,7 +186,7 @@
                         <label for="quantity_capsule" class="col-md-4 col-form-label ">Capsule: Quantity</label>
                         <input id="quantity_capsule" type="number"
                                class="form-control @error('quantity_capsule') is-invalid @enderror"
-                               name="quantity_capsule" value="{{ old('quantity_capsule') ??$current_capsule->pivot->quantity}}"
+                               name="quantity_capsule" value="{{ old('quantity_capsule') ??$current_capsule->pivot->quantity?? null}}"
                                autocomplete="quantity_capsule" autofocus>
 
                         @error('quantity_capsule')
@@ -129,8 +198,8 @@
                         <label for="screw_cap" class="col-md-4 col-form-label ">Screw Cap</label>
                         <select id="screw_cap"
                                 class="form-control" name="screw_cap">
-                            <option value="{{ $current_screw_cap->id }}">
-                                Old value: {{ $current_screw_cap->code }}
+                            <option value="{{ $current_screw_cap->id ?? null}}">
+                                Old value: {{ $current_screw_cap->code ?? null}}
                             </option>
                             @foreach($screwCaps as $product)
                                 <option value='{{$product->id}}'>
@@ -142,7 +211,7 @@
                         <label for="quantity_screw_cap" class="col-md-4 col-form-label ">Screw Cap:
                             Quantity</label><input id="quantity_screw_cap" type="number"
                                                    class="form-control @error('quantity_screw_cap') is-invalid @enderror"
-                                                   name="quantity_screw_cap" value="{{ old('quantity_screw_cap') ??$current_screw_cap->pivot->quantity}}"
+                                                   name="quantity_screw_cap" value="{{ old('quantity_screw_cap') ??$current_screw_cap->pivot->quantity?? null}}"
                                                    autocomplete="quantity_screw_cap" autofocus>
 
                         @error('quantity_screw_cap')
@@ -154,8 +223,8 @@
                         <label for="carton" class="col-md-4 col-form-label ">Carton</label>
                         <select id="carton"
                                 class="form-control" name="carton">
-                            <option value="{{ $current_carton->id }}">
-                                Old value: {{ $current_carton->code }}
+                            <option value="{{ $current_carton->id ?? null}}">
+                                Old value: {{ $current_carton->code ?? null}}
                             </option>
                             @foreach($cartons as $product)
                                 <option value='{{$product->id}}'>
@@ -167,7 +236,7 @@
                         <label for="quantity_carton" class="col-md-4 col-form-label ">Carton: Quantity</label><input
                             id="quantity_carton" type="number"
                             class="form-control @error('quantity_carton') is-invalid @enderror"
-                            name="quantity_carton" value="{{ old('quantity_carton') ??$current_carton->pivot->quantity}}"
+                            name="quantity_carton" value="{{ old('quantity_carton') ??$current_carton->pivot->quantity?? null}}"
                             autocomplete="quantity_carton" autofocus>
 
                         @error('quantity_carton')
@@ -179,8 +248,8 @@
                         <label for="divider" class="col-md-4 col-form-label ">Divider</label>
                         <select id="divider"
                                 class="form-control" name="divider">
-                            <option value="{{ $current_divider->id }}">
-                                Old value: {{ $current_divider->code }}
+                            <option value="{{ $current_divider->id ?? null}}">
+                                Old value: {{ $current_divider->code ?? null}}
                             </option>
                             @foreach($dividers as $product)
                                 <option value='{{$product->id}}'>
@@ -192,7 +261,7 @@
                         <label for="quantity_divider" class="col-md-4 col-form-label ">Divider: Quantity</label><input
                             id="quantity_divider" type="number"
                             class="form-control @error('quantity_divider') is-invalid @enderror"
-                            name="quantity_divider" value="{{ old('quantity_divider') ??$current_divider->pivot->quantity}}"
+                            name="quantity_divider" value="{{ old('quantity_divider') ??$current_divider->pivot->quantity?? null}}"
                             autocomplete="quantity_divider" autofocus>
 
                         @error('quantity_divider')
@@ -204,8 +273,8 @@
                         <label for="pallet" class="col-md-4 col-form-label ">Pallet</label>
                         <select id="pallet"
                                 class="form-control" name="pallet">
-                            <option value="{{ $current_pallet->id }}">
-                                Old value: {{ $current_pallet->code }}
+                            <option value="{{ $current_pallet->id ?? null}}">
+                                Old value: {{ $current_pallet->code ?? null}}
                             </option>
                             @foreach($pallets as $product)
                                 <option value='{{$product->id}}'>
@@ -217,7 +286,7 @@
                         <label for="quantity_pallet" class="col-md-4 col-form-label ">Pallet: Quantity</label><input
                             id="quantity_pallet" type="number"
                             class="form-control @error('quantity_pallet') is-invalid @enderror"
-                            name="quantity_pallet" value="{{ old('quantity_pallet') ??$current_pallet->pivot->quantity}}"
+                            name="quantity_pallet" value="{{ old('quantity_pallet') ??$current_pallet->pivot->quantity?? null}}"
                             autocomplete="quantity_pallet"  autofocus>
 
                         @error('quantity_pallet')

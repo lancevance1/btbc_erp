@@ -17,7 +17,7 @@ class ProductController extends Controller
     {
         $products = DB::table('products')
             ->take(10)
-            ->orderBy('created_at','DESC')
+            ->orderBy('id','DESC')
             ->get();
         return view('products.index',compact('products'));
     }
@@ -40,7 +40,7 @@ class ProductController extends Controller
             'size' => '',
             'order_quantity' => '',
             'to_be_ordered' => '',
-            'current_inventory_value' => '',
+            'current_inventory_value' => 'required',
             'belong_to' => '',
 
         ]);

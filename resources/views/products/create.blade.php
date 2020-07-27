@@ -17,6 +17,7 @@
                                 class="form-control @error('type') is-invalid @enderror"
                                 name="type"
                                 autofocus>
+                            <option value="wine">Wine</option>
                             <option value="bottle">Bottle</option>
                             <option value="cork">Cork</option>
                             <option value="capsule">Capsule</option>
@@ -50,6 +51,18 @@
                                 autocomplete="description" autofocus>
 
                         @error('description')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="size" class="col-md-4 col-form-label ">Size</label>
+                        <input id="size" type="text"
+                               class="form-control @error('size') is-invalid @enderror"
+                               name="size" value="{{ old('size') }}"
+                               autocomplete="size" autofocus>
+
+                        @error('size')
                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -139,17 +152,7 @@
                                     </span>
                         @enderror
 
-                        <label for="size" class="col-md-4 col-form-label ">Size</label>
-                        <input id="size" type="text"
-                               class="form-control @error('size') is-invalid @enderror"
-                               name="size" value="{{ old('size') }}"
-                               autocomplete="size" autofocus>
 
-                        @error('size')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
 
                     </div>
 

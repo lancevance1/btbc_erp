@@ -63,8 +63,21 @@
                                     </span>
                         @enderror
 
+                        <label for="size" class="col-md-4 col-form-label ">Size</label>
+                        <input id="size" type="text"
+                               class="form-control @error('size') is-invalid @enderror"
+                               name="size" value="{{ old('size')??$product->size }}"
+                               autocomplete="size" autofocus>
+
+                        @error('size')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+
                         <label for="price" class="col-md-4 col-form-label ">Price</label>
-                        <input id="price" type="number"
+                        <input id="price" type="number" placeholder="Insert Price..." step="0.01"
                                class="form-control @error('price') is-invalid @enderror"
                                name="price" value="{{ old('price') ??$product->price}}"
                                autocomplete="price" autofocus>
@@ -147,17 +160,7 @@
                                     </span>
                         @enderror
 
-                        <label for="size" class="col-md-4 col-form-label ">Size</label>
-                        <input id="size" type="text"
-                               class="form-control @error('size') is-invalid @enderror"
-                               name="size" value="{{ old('size')??$product->size }}"
-                               autocomplete="size" autofocus>
 
-                        @error('size')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
 
 
 

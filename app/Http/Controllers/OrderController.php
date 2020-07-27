@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderExport;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class OrderController extends Controller
@@ -34,28 +39,31 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         // get dynamic options
+        $wines = Product::where('type', 'wine')
+            ->orderBy('code')
+            ->get();
         $bottles = Product::where('type', 'bottle')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
         $corks = Product::where('type', 'cork')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
         $capsules = Product::where('type', 'capsule')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
         $screwCaps = Product::where('type', 'screw cap')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
         $cartons = Product::where('type', 'carton')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
         $dividers = Product::where('type', 'divider')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
         $pallets = Product::where('type', 'pallet')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('code')
             ->get();
-        return view('orders.create', compact('bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets'));
+        return view('orders.create', compact('wines','bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets'));
     }
 
     public function store(Request $request)
@@ -64,7 +72,9 @@ class OrderController extends Controller
         $data = $request->validate([
             'order_number' => 'required',
             'run_number' => 'required',
-            'wine_code' => 'required',
+            'COA' => 'required',
+            'LIP' => 'required',
+            'wine'=>'required',
             'bottle' => 'required',
             'cork' => 'required',
             'capsule' => 'required',
@@ -72,6 +82,7 @@ class OrderController extends Controller
             'carton' => 'required',
             'divider' => 'required',
             'pallet' => 'required',
+            'quantity_wine'=>'required',
             'quantity_bottle' => 'required',
             'quantity_cork' => 'required',
             'quantity_capsule' => 'required',
@@ -83,6 +94,9 @@ class OrderController extends Controller
         //dd($data);
         try {
             $order = Order::create($data);
+//            $order->COA = $data['COA'];
+    //         $order->save();
+            $order->products()->attach($data['wine'], ['quantity' => $data['quantity_wine']]);
             $order->products()->attach($data['bottle'], ['quantity' => $data['quantity_bottle']]);
             $order->products()->attach($data['cork'], ['quantity' => $data['quantity_cork']]);
             $order->products()->attach($data['capsule'], ['quantity' => $data['quantity_capsule']]);
@@ -165,6 +179,9 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         // get dynamic options
+        $wines = Product::where('type', 'wine')
+            ->orderBy('created_at', 'DESC')
+            ->get();
         $bottles = Product::where('type', 'bottle')
             ->orderBy('created_at', 'DESC')
             ->get();
@@ -187,6 +204,7 @@ class OrderController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get();
 
+        $current_wine = $order->products->where('type', 'wine')->first();
         $current_bottle = $order->products->where('type', 'bottle')->first();
         $current_cork = $order->products->where('type', 'cork')->first();
         $current_capsule = $order->products->where('type', 'capsule')->first();
@@ -195,8 +213,8 @@ class OrderController extends Controller
         $current_divider = $order->products->where('type', 'divider')->first();
         $current_pallet = $order->products->where('type', 'pallet')->first();
 
-        return view('orders.edit', compact('order', 'bottles',
-                'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets',
+        return view('orders.edit', compact('order','wines', 'bottles',
+                'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets','current_wine',
                 'current_bottle', 'current_cork', 'current_capsule', 'current_screw_cap',
                 'current_carton', 'current_divider', 'current_pallet')
 
@@ -206,29 +224,36 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
 
-        $data = $request->validate([
-            'order_number' => 'required',
-            'run_number' => 'required',
-            'wine_code' => 'required',
-            'bottle' => 'required',
-            'cork' => 'required',
-            'capsule' => 'required',
-            'screw_cap' => 'required',
-            'carton' => 'required',
-            'divider' => 'required',
-            'pallet' => 'required',
-            'quantity_bottle' => 'required',
-            'quantity_cork' => 'required',
-            'quantity_capsule' => 'required',
-            'quantity_screw_cap' => 'required',
-            'quantity_carton' => 'required',
-            'quantity_divider' => 'required',
-            'quantity_pallet' => 'required',
-        ]);
+
         try {
+            $data = $request->validate([
+                'order_number' => 'required',
+                'run_number' => 'required',
+                'COA' => 'required',
+                'LIP' => 'required',
+                'wine' => 'required',
+                'bottle' => 'required',
+                'cork' => 'required',
+                'capsule' => 'required',
+                'screw_cap' => 'required',
+                'carton' => 'required',
+                'divider' => 'required',
+                'pallet' => 'required',
+                'quantity_wine' => 'required',
+                'quantity_bottle' => 'required',
+                'quantity_cork' => 'required',
+                'quantity_capsule' => 'required',
+                'quantity_screw_cap' => 'required',
+                'quantity_carton' => 'required',
+                'quantity_divider' => 'required',
+                'quantity_pallet' => 'required',
+            ]);
+
+
             $order->update($data);
             //dd($data);
-            $order->products()->sync([$data['bottle'], $data['cork'], $data['capsule'], $data['screw_cap'], $data['carton'], $data['divider'], $data['pallet']]);
+            $order->products()->sync([$data['wine'],$data['bottle'], $data['cork'], $data['capsule'], $data['screw_cap'], $data['carton'], $data['divider'], $data['pallet']]);
+            $order->products()->updateExistingPivot($data['wine'], ['quantity' => $data['quantity_wine']]);
             $order->products()->updateExistingPivot($data['bottle'], ['quantity' => $data['quantity_bottle']]);
             $order->products()->updateExistingPivot($data['cork'], ['quantity' => $data['quantity_cork']]);
             $order->products()->updateExistingPivot($data['capsule'], ['quantity' => $data['quantity_capsule']]);
@@ -263,5 +288,79 @@ class OrderController extends Controller
         //dd($request->id);
         $tmp = Order::onlyTrashed()->where('id',$request->id)->restore();
         return redirect('orders/')->with('status', 'Order restored');
+    }
+
+    public function forceDestroy(Request $request)
+    {
+        //dd($request);
+        try {
+            Order::onlyTrashed()->where('id',$request->id)->forceDelete();
+            return \redirect('orders/')->with('status', 'Permanently Deleted');
+        } catch (\Exception $e) {
+            echo $e;
+        }
+    }
+
+    public function export(Request $request)
+    {
+        //return Excel::download(new OrderExport(), 'order.xlsx');
+
+        //get data
+        $orders = Order::withoutTrashed()->where('id',$request->id)->get();
+
+
+        //load spreadsheet
+        $spreadsheet = IOFactory::load("template.xlsx");
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $order = $orders->first();
+        $bottle = $order->products->where('type','bottle')->first();
+        $cork = $order->products->where('type','cork')->first();
+        $capsule = $order->products->where('type','capsule')->first();
+        $screw_cap = $order->products->where('type','screw cap')->first();
+        $carton = $order->products->where('type','carton')->first();
+        $divider = $order->products->where('type','divider')->first();
+        $pallet = $order->products->where('type','pallet')->first();
+        //dd($bottle->code);
+
+
+        // manipulate cells
+        $sheet->setCellValue('H5', $order->run_number);
+        $sheet->setCellValue('I11', $order->order_number);
+        $sheet->setCellValue('C11', $order->wine_code);
+        $sheet->setCellValue('C30', $bottle->code);
+        $sheet->setCellValue('C31', $cork->code);
+        $sheet->setCellValue('C32', $capsule->code);
+        $sheet->setCellValue('C33', $screw_cap->code);
+        $sheet->setCellValue('C35', $carton->code);
+        $sheet->setCellValue('C36', $divider->code);
+        $sheet->setCellValue('C48', $pallet->code);
+
+        $sheet->setCellValue('D30', $bottle->description);
+        $sheet->setCellValue('D31', $cork->description);
+        $sheet->setCellValue('D32', $capsule->description);
+        $sheet->setCellValue('D33', $screw_cap->description);
+        $sheet->setCellValue('D35', $carton->description);
+        $sheet->setCellValue('D36', $divider->description);
+        //$sheet->setCellValue('', $pallet->descrition);
+
+        //dd($bottle->pivot->quantity);
+        $sheet->setCellValue('I30', $bottle->pivot->quantity);
+        $sheet->setCellValue('I31', $cork->pivot->quantity);
+        $sheet->setCellValue('I32', $capsule->pivot->quantity);
+        $sheet->setCellValue('I33', $screw_cap->pivot->quantity);
+        $sheet->setCellValue('I35', $carton->pivot->quantity);
+        $sheet->setCellValue('I36', $divider->pivot->quantity);
+        //$sheet->setCellValue('I37', $bottle->pivot->quantity);
+
+        // create a file name
+        $fileName = 'BAF_'.'BAXXX'.'_'.$order->run_number.'_'.$order->order_number.'_'.$order->wine_code.'.xlsx';
+
+        // create a new spreadsheet
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($fileName);
+
+
+        return redirect('orders/')->with('status', 'Excel created');
     }
 }

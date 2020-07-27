@@ -22,7 +22,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home.index');
 Route::get('/dashboard', 'DashboardController@show')->name('dashboard.show');
-Route::patch('/orders/{id}', 'OrderController@reverse');
+Route::patch('/orders/reverse/{id}', 'OrderController@reverse');
+Route::delete('/orders/forceDelete/{id}', 'OrderController@forceDestroy');
+Route::get('/orders/export/{id}', 'OrderController@export');
 Route::resources([
     'orders' => 'OrderController',
     'products' => 'ProductController',
