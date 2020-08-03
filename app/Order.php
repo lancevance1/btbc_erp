@@ -16,12 +16,18 @@ class Order extends Model
             ->withPivot('quantity');
     }
 
+    public function customers()
+    {
+        return $this->belongsTo('App\Customer','customer_id');
+
+    }
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'order_number', 'run_number','wine_code','COA','LIP',
+        'order_number', 'run_number','wine_code','COA','LIP','customer_id'
     ];
 }

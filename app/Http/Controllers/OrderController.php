@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\Exports\OrderExport;
 use App\Product;
 use Illuminate\Http\Request;
@@ -28,10 +29,7 @@ class OrderController extends Controller
     {
         $total_orders = Order::whereNull('deleted_at')->count();
 
-        $orders = Order::whereNull('deleted_at')
-            ->take(10)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $orders = Order::whereNull('deleted_at')->take(10)->orderBy('created_at', 'DESC')->get();
         $orders_soft_deleted = Order::onlyTrashed()->get();
         return view('orders.index', compact('orders', 'total_orders','orders_soft_deleted'));
     }
@@ -63,7 +61,9 @@ class OrderController extends Controller
         $pallets = Product::where('type', 'pallet')
             ->orderBy('code')
             ->get();
-        return view('orders.create', compact('wines','bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets'));
+
+        $customers = Customer::all();
+        return view('orders.create', compact('wines','bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets','customers'));
     }
 
     public function store(Request $request)
@@ -72,6 +72,7 @@ class OrderController extends Controller
         $data = $request->validate([
             'order_number' => 'required',
             'run_number' => 'required',
+            'customer_id' => 'required',
             'COA' => 'required',
             'LIP' => 'required',
             'wine'=>'required',
@@ -94,6 +95,8 @@ class OrderController extends Controller
         //dd($data);
         try {
             $order = Order::create($data);
+//            $order->customer_id = $data['customer'];
+//            $order->push();
 //            $order->COA = $data['COA'];
     //         $order->save();
             $order->products()->attach($data['wine'], ['quantity' => $data['quantity_wine']]);
@@ -204,6 +207,10 @@ class OrderController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get();
 
+        $customers = Customer::all();
+        $current_customer = $order->customers;
+//        dd($current_customer->id);
+
         $current_wine = $order->products->where('type', 'wine')->first();
         $current_bottle = $order->products->where('type', 'bottle')->first();
         $current_cork = $order->products->where('type', 'cork')->first();
@@ -214,9 +221,9 @@ class OrderController extends Controller
         $current_pallet = $order->products->where('type', 'pallet')->first();
 
         return view('orders.edit', compact('order','wines', 'bottles',
-                'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets','current_wine',
+                'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets','customers','current_wine',
                 'current_bottle', 'current_cork', 'current_capsule', 'current_screw_cap',
-                'current_carton', 'current_divider', 'current_pallet')
+                'current_carton', 'current_divider', 'current_pallet','current_customer')
 
         );
     }
@@ -229,6 +236,7 @@ class OrderController extends Controller
             $data = $request->validate([
                 'order_number' => 'required',
                 'run_number' => 'required',
+                'customer_id' => 'required',
                 'COA' => 'required',
                 'LIP' => 'required',
                 'wine' => 'required',
@@ -303,6 +311,7 @@ class OrderController extends Controller
 
     public function export(Request $request)
     {
+        $log='';
         //return Excel::download(new OrderExport(), 'order.xlsx');
 
         //get data
@@ -314,6 +323,7 @@ class OrderController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         $order = $orders->first();
+        $wine = $order->products->where('type','wine')->first();
         $bottle = $order->products->where('type','bottle')->first();
         $cork = $order->products->where('type','cork')->first();
         $capsule = $order->products->where('type','capsule')->first();
@@ -321,13 +331,40 @@ class OrderController extends Controller
         $carton = $order->products->where('type','carton')->first();
         $divider = $order->products->where('type','divider')->first();
         $pallet = $order->products->where('type','pallet')->first();
-        //dd($bottle->code);
+
+
+
 
 
         // manipulate cells
+        $contacts = $order->customers->contacts;
+        $str='C';
+        $str1 = 'I';
+
+        for ($i=0; $i<sizeof($contacts);$i++){
+            $cell_name = $str.'7';
+            $cell_email = $str.'9';
+            $cell_phone = $str1.'8';
+            $cell_fax = $str1.'9';
+            //dd($contacts[$i]->name);
+            $sheet->setCellValue($cell_name, $contacts[$i]->name);
+            $sheet->setCellValue($cell_email, $contacts[$i]->email);
+            $sheet->setCellValue($cell_phone, $contacts[$i]->phone);
+            $sheet->setCellValue($cell_fax, $contacts[$i]->fax);
+            $str++;
+            $str++;
+            $str1++;
+            $str1++;
+            //dd($str);
+        }
+
+        $sheet->setCellValue('C6', $order->customers->name);
+        $sheet->setCellValue('C8', $order->customers->address);
+
         $sheet->setCellValue('H5', $order->run_number);
         $sheet->setCellValue('I11', $order->order_number);
-        $sheet->setCellValue('C11', $order->wine_code);
+        $sheet->setCellValue('C11', $wine->code);
+        $sheet->setCellValue('C20', $wine->code);
         $sheet->setCellValue('C30', $bottle->code);
         $sheet->setCellValue('C31', $cork->code);
         $sheet->setCellValue('C32', $capsule->code);
@@ -336,6 +373,7 @@ class OrderController extends Controller
         $sheet->setCellValue('C36', $divider->code);
         $sheet->setCellValue('C48', $pallet->code);
 
+        $sheet->setCellValue('C21', $wine->description);
         $sheet->setCellValue('D30', $bottle->description);
         $sheet->setCellValue('D31', $cork->description);
         $sheet->setCellValue('D32', $capsule->description);
@@ -358,9 +396,18 @@ class OrderController extends Controller
 
         // create a new spreadsheet
         $writer = new Xlsx($spreadsheet);
-        $writer->save($fileName);
+        try {
+            $writer->save($fileName);
+        }catch (\Exception $e){
+            $log = $e->getMessage();
+    }
 
 
-        return redirect('orders/')->with('status', 'Excel created');
+        if($log==null){
+            return redirect('orders/')->with('status', 'Excel created');
+        }else{
+            return redirect('orders/')->with('status', $log);
+        }
+
     }
 }

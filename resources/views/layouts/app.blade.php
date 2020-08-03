@@ -23,7 +23,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}" >
+                <a class="navbar-brand" href="{{ url('/dashboard') }}" >
                     <div><img src="{{ URL::to('/') }}/svg/wine.svg" alt="wine icon" width="25" height="25" >
                     {{ config('app.name', 'Laravel') }}</div>
                 </a>
@@ -39,6 +39,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/products">Dry Goods</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/customers">Customers</a>
                         </li>
 
                     </ul>

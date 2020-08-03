@@ -51,6 +51,19 @@
                                     </span>
                         @enderror
 
+                        <label for="customer_id" class="col-md-4 col-form-label ">Customer</label>
+                        <select id="customer_id"
+                                class="form-control" name="customer_id">
+                            <option value="{{ $current_customer->id ?? null }}">
+                                Old value: {{ $current_customer->name ?? null}}
+                            </option>
+                            @foreach($customers as $tmp)
+                                <option value='{{$tmp->id}}'>
+                                    {{$tmp->name}}
+                                </option>
+                            @endforeach
+                        </select>
+
 
                         <label for="COA" class="col-md-4 col-form-label ">COA</label>
                         <select id="COA"

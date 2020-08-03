@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('title', 'Orders')
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -40,6 +42,9 @@
                                     Run Number: {{ $order->run_number }}
                                     Created at: {{ $order->created_at }}
                                     Updated at: {{ $order->updated_at }}
+{{--{{dd($order->customers->name)}}--}}
+                                    Customer Name: {{$order->customers->name ?? null}}
+
                                     @foreach($order->products as $product)
                                         {{ $product->type }}: {{ $product->code }}
                                         Quantity: {{$product->pivot->quantity}}

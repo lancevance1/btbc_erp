@@ -12,6 +12,7 @@
             Edit
         </a>
         {{$order}}
+        Customer Name: {{$order->customers->name}}
         @foreach($order->products as $tmp)
             Product code: {{$tmp->code}}
             Quantity: {{$tmp->pivot->quantity}}

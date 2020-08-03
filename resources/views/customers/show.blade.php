@@ -1,19 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Show Dry Good')
+@section('title', 'Show Customer')
 
 @section('content')
     <div class="container">
-        <form action="/products/{{ $product->id}}" method="POST">
+        <form action="/customers/{{ $customer->id}}" method="POST">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-secondary">Delete</button>
         </form>
-        <a href="/products/{{$product->id}}/edit">
+        <a href="/customers/{{ $customer->id}}/edit">
             Edit
         </a>
-
-
-        {{$product}}
+        {{$customer}}
 
     </div>
 @endsection
