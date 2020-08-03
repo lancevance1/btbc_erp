@@ -69,12 +69,38 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $str = '';
+        try {
         $data = $request->validate([
             'order_number' => 'required',
             'run_number' => 'required',
             'customer_id' => 'required',
             'COA' => 'required',
             'LIP' => 'required',
+            'cartons_direction'=> 'required',
+            'bottles_direction'=> 'required',
+            'back'=> '',
+            'front'=> '',
+            'neck'=> '',
+            'bottle_print'=> '',
+            'carton_labels'=> '',
+            'turbidity'=> '',
+            'do2'=> '',
+            'alc_in_tank'=> '',
+            'alc_on_label'=> '',
+            'additives'=> '',
+            'delivered_by'=> '',
+            'required_by'=> '',
+            'pack_size'=> 'required',
+            'samples_required'=> 'required',
+            'cases_required'=> 'required',
+
+            'cont_size'=> '',
+            'stretch_wrap'=> '',
+            'card_board'=> '',
+            'slip_sheet'=> '',
+            'run_length'=> '',
+
+
             'wine'=>'required',
             'bottle' => 'required',
             'cork' => 'required',
@@ -93,7 +119,7 @@ class OrderController extends Controller
             'quantity_pallet' => 'required',
         ]);
         //dd($data);
-        try {
+
             $order = Order::create($data);
 //            $order->customer_id = $data['customer'];
 //            $order->push();
@@ -239,6 +265,30 @@ class OrderController extends Controller
                 'customer_id' => 'required',
                 'COA' => 'required',
                 'LIP' => 'required',
+                'cartons_direction'=> 'required',
+                'bottles_direction'=> 'required',
+                'back'=> '',
+                'front'=> '',
+                'neck'=> '',
+                'bottle_print'=> '',
+                'carton_labels'=> '',
+                'turbidity'=> '',
+                'do2'=> '',
+                'alc_in_tank'=> '',
+                'alc_on_label'=> '',
+                'additives'=> '',
+                'delivered_by'=> '',
+                'required_by'=> '',
+                'pack_size'=> 'required',
+                'samples_required'=> 'required',
+                'cases_required'=> 'required',
+
+                'cont_size'=> '',
+                'stretch_wrap'=> '',
+                'card_board'=> '',
+                'slip_sheet'=> '',
+                'run_length'=> '',
+
                 'wine' => 'required',
                 'bottle' => 'required',
                 'cork' => 'required',
@@ -311,6 +361,7 @@ class OrderController extends Controller
 
     public function export(Request $request)
     {
+
         $log='';
         //return Excel::download(new OrderExport(), 'order.xlsx');
 
@@ -363,6 +414,74 @@ class OrderController extends Controller
 
         $sheet->setCellValue('H5', $order->run_number);
         $sheet->setCellValue('I11', $order->order_number);
+
+        $sheet->setCellValue('C14', $order->cases_required);
+        $sheet->setCellValue('C15', $order->samples_required);
+        $sheet->setCellValue('C22', $order->do2);
+        $sheet->setCellValue('C23', $order->additives);
+        $sheet->setCellValue('H14', $order->pack_size);
+        $sheet->setCellValue('F19', $order->alc_on_label);
+        $sheet->setCellValue('F20', $order->alc_in_tank);
+        $sheet->setCellValue('F21', $order->turbidity);
+        $sheet->setCellValue('I15', date_format(date_create($order->required_by),"d/m/Y"));
+        $sheet->setCellValue('I16', date_format(date_create($order->delivered_by),"d/m/Y"));
+        $sheet->setCellValue('C40', $order->carton_labels);
+        $sheet->setCellValue('C41', $order->bottle_print);
+        $sheet->setCellValue('D42', $order->neck);
+        $sheet->setCellValue('D43', $order->front);
+        $sheet->setCellValue('D44', $order->back);
+        $sheet->setCellValue('F15', $order->run_length);
+        $sheet->setCellValue('C52', $order->slip_sheets);
+        $sheet->setCellValue('C53', $order->card_board);
+        $sheet->setCellValue('C54', $order->stretch_wrap);
+        $sheet->setCellValue('C55', $order->cont_size);
+
+
+        if($order->bottles_direction === 'upright'){
+            $sheet->setCellValue('I48', 'X');
+        }elseif($order->bottles_direction === 'inverted'){
+            $sheet->setCellValue('I49', 'X');
+        }else{
+            $sheet->setCellValue('I50', 'X');
+        }
+
+        if($order->bottles_direction === 'upright'){
+            $sheet->setCellValue('I52', 'X');
+        }else{
+            $sheet->setCellValue('I53', 'X');
+        }
+
+        if($order->coa){
+            $sheet->setCellValue('F17', 'YES');
+        }else{
+            $sheet->setCellValue('F17', 'NO');
+        }
+        if($order->lip){
+            $sheet->setCellValue('F18', 'YES');
+        }else{
+            $sheet->setCellValue('F18', 'NO');
+        }
+
+        if($order->slip_sheet){
+            $sheet->setCellValue('C52', 'YES');
+        }else{
+            $sheet->setCellValue('C52', 'NO');
+        }
+
+        if($order->card_board){
+            $sheet->setCellValue('C53', 'YES');
+        }else{
+            $sheet->setCellValue('C53', 'NO');
+        }
+
+        if($order->carton_labels){
+            $sheet->setCellValue('C40', 'YES');
+        }else{
+            $sheet->setCellValue('C40', 'NO');
+        }
+
+
+
         $sheet->setCellValue('C11', $wine->code);
         $sheet->setCellValue('C20', $wine->code);
         $sheet->setCellValue('C30', $bottle->code);

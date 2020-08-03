@@ -11,6 +11,22 @@
                         <h1>Add New Order</h1>
                     </div>
                     <div class="form-group row">
+
+
+
+
+
+                        <label for="customer_id" class="col-md-4 col-form-label ">Customer</label>
+                        <select id="customer_id"
+                                class="form-control" name="customer_id">
+
+                            @foreach($customers as $tmp)
+                                <option value='{{$tmp->id}}'>
+                                    {{$tmp->name}}
+                                </option>
+                            @endforeach
+                        </select>
+
                         <label for="order_number" class="col-md-4 col-form-label ">Order No.</label>
                         <input id="order_number" type="text"
                                class="form-control @error('order_number') is-invalid @enderror"
@@ -24,7 +40,10 @@
                         @enderror
 
 
-{{--                        <label for="wine_code" class="col-md-4 col-form-label ">Wine Code</label>--}}
+
+
+
+                        {{--                        <label for="wine_code" class="col-md-4 col-form-label ">Wine Code</label>--}}
 {{--                        <input id="wine_code" type="text"--}}
 {{--                               class="form-control @error('wine_code') is-invalid @enderror"--}}
 {{--                               name="wine_code" value="{{ old('wine_code') }}"--}}
@@ -35,6 +54,8 @@
 {{--                                        <strong>{{ $message }}</strong>--}}
 {{--                                    </span>--}}
 {{--                        @enderror--}}
+
+
 
                         <label for="run_number" class="col-md-4 col-form-label ">Run No.</label>
                         <input id="run_number" type="number"
@@ -49,17 +70,233 @@
                                     </span>
                         @enderror
 
+                        <label for="cases_required" class="col-md-4 col-form-label ">Cases Required</label>
+                        <input id="cases_required" type="number"
+                               class="form-control @error('cases_required') is-invalid @enderror"
+                               name="cases_required" value="{{ old('cases_required') }}"
+                               autocomplete="cases_required" autofocus>
 
-                        <label for="customer_id" class="col-md-4 col-form-label ">Customer</label>
-                        <select id="customer_id"
-                                class="form-control" name="customer_id">
+                        @error('cases_required')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
 
-                            @foreach($customers as $tmp)
-                                <option value='{{$tmp->id}}'>
-                                    {{$tmp->name}}
-                                </option>
-                            @endforeach
+                        <label for="samples_required" class="col-md-4 col-form-label ">Samples Required</label>
+                        <input id="samples_required" type="number"
+                               class="form-control @error('samples_required') is-invalid @enderror"
+                               name="samples_required" value="{{ old('samples_required') ??0}}"
+                               autocomplete="samples_required" autofocus>
+
+                        @error('samples_required')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+
+
+                        <label for="pack_size" class="col-md-4 col-form-label ">Pack Size</label>
+                        <input id="pack_size" type="number"
+                               class="form-control @error('pack_size') is-invalid @enderror"
+                               name="pack_size" value="{{ old('pack_size')?? 6 }}"
+                               autocomplete="pack_size" autofocus>
+
+                        @error('pack_size')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="do2" class="col-md-4 col-form-label ">DO2 %</label>
+                        <input id="do2" type="number" placeholder="Insert..." step="0.1"
+                               class="form-control @error('do2') is-invalid @enderror"
+                               name="do2" value="{{ old('do2') }}"
+                               autocomplete="do2" autofocus>
+
+                        @error('do2')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="additives" class="col-md-4 col-form-label ">Additives</label>
+                        <input id="additives" type="text"
+                               class="form-control @error('additives') is-invalid @enderror"
+                               name="additives" value="{{ old('additives') }}"
+                               autocomplete="additives" autofocus>
+
+                        @error('additives')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="alc_on_label" class="col-md-4 col-form-label ">Alc% on Label</label>
+                        <input id="alc_on_label" type="number" placeholder="Insert..." step="0.1"
+                               class="form-control @error('alc_on_label') is-invalid @enderror"
+                               name="alc_on_label" value="{{ old('alc_on_label') }}"
+                               autocomplete="alc_on_label" autofocus>
+
+                        @error('alc_on_label')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="alc_in_tank" class="col-md-4 col-form-label ">Alc% in Tank</label>
+                        <input id="alc_in_tank" type="number" placeholder="Insert..." step="0.1"
+                               class="form-control @error('alc_in_tank') is-invalid @enderror"
+                               name="alc_in_tank" value="{{ old('alc_in_tank') }}"
+                               autocomplete="alc_in_tank" autofocus>
+
+                        @error('alc_in_tank')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="turbidity" class="col-md-4 col-form-label ">Turbudity</label>
+                        <input id="turbidity" type="number" placeholder="Insert..." step="0.1"
+                               class="form-control @error('turbidity') is-invalid @enderror"
+                               name="turbidity" value="{{ old('turbidity') }}"
+                               autocomplete="turbidity" autofocus>
+
+                        @error('turbidity')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="required_by" class="col-md-4 col-form-label ">Required By</label>
+                        <input id="required_by" type="date"
+                               class="form-control @error('required_by') is-invalid @enderror"
+                               name="required_by" value="{{ old('required_by') }}"
+                               autocomplete="required_by" autofocus>
+
+                        @error('required_by')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="delivered_by" class="col-md-4 col-form-label ">Delivered By</label>
+                        <input id="delivered_by" type="date"
+                               class="form-control @error('delivered_by') is-invalid @enderror"
+                               name="delivered_by" value="{{ old('delivered_by') }}"
+                               autocomplete="delivered_by" autofocus>
+
+                        @error('delivered_by')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="carton_labels" class="col-md-4 col-form-label ">Carton Labels</label>
+                        <select id="carton_labels"
+                                class="form-control" name="carton_labels">
+
+                            <option value='0'>
+                                NO
+                            </option>
+                            <option value='1'>
+                                YES
+                            </option>
                         </select>
+
+                        <label for="bottle_print" class="col-md-4 col-form-label ">Bottle Print</label>
+                        <input id="bottle_print" type="text"
+                               class="form-control @error('bottle_print') is-invalid @enderror"
+                               name="bottle_print" value="{{ old('bottle_print') ??'LOT/TIME YYYY/MM/DD'}}"
+                               autocomplete="bottle_print" autofocus>
+
+                        @error('bottle_print')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="neck" class="col-md-4 col-form-label ">Neck</label>
+                        <input id="neck" type="text"
+                               class="form-control @error('neck') is-invalid @enderror"
+                               name="neck" value="{{ old('neck') ?? 'BEST FIT'}}"
+                               autocomplete="neck" autofocus>
+
+                        @error('neck')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="front" class="col-md-4 col-form-label ">Front</label>
+                        <input id="front" type="text"
+                               class="form-control @error('front') is-invalid @enderror"
+                               name="front" value="{{ old('front')??'BEST FIT' }}"
+                               autocomplete="front" autofocus>
+
+                        @error('front')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="back" class="col-md-4 col-form-label ">Back</label>
+                        <input id="back" type="text"
+                               class="form-control @error('back') is-invalid @enderror"
+                               name="back" value="{{ old('back')??'BEST FIT' }}"
+                               autocomplete="back" autofocus>
+
+                        @error('back')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="bottles_direction" class="col-md-4 col-form-label ">Bottles Direction</label>
+                        <select id="bottles_direction"
+                                class="form-control" name="bottles_direction">
+
+
+                                <option value='upright'>
+                                    Upright
+                                </option>
+                            <option value='inverted'>
+                                Inverted
+                            </option>
+                            <option value='laydown'>
+                                Laydown
+                            </option>
+
+                        </select>
+
+                        <label for="cartons_direction" class="col-md-4 col-form-label ">Carton Direction</label>
+                        <select id="cartons_direction"
+                                class="form-control" name="cartons_direction">
+
+
+                            <option value='upright'>
+                                Upright
+                            </option>
+                            <option value='inverted'>
+                                Inverted
+                            </option>
+                            o
+
+                        </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                         <label for="COA" class="col-md-4 col-form-label ">COA</label>
@@ -283,6 +520,81 @@
                                     </span>
                         @enderror
 
+
+                        <label for="run_length" class="col-md-4 col-form-label ">Run Length</label>
+                        <select id="run_length"
+                                class="form-control" name="run_length">
+
+
+                            <option value='Exact Cases'>
+                                Exact Cases
+                            </option>
+                            <option value='Run Out Labels'>
+                                Run Out Labels
+                            </option>
+                            <option value='Run Out Glass'>
+                                Run Out Glass
+                            </option>
+                            <option value='Run Out Cartons'>
+                                Run Out Cartons
+                            </option>
+                            <option value='Run Out Caps'>
+                                Run Out Caps
+                            </option>
+                            <option value='Run Out Corks'>
+                                Run Out Corks
+                            </option>
+
+
+                        </select>
+
+                        <label for="slip_sheet" class="col-md-4 col-form-label ">Slip Sheet</label>
+                        <select id="slip_sheet"
+                                class="form-control" name="slip_sheet">
+
+                            <option value='0'>
+                                NO
+                            </option>
+                            <option value='1'>
+                                YES
+                            </option>
+                        </select>
+
+                        <label for="card_board" class="col-md-4 col-form-label ">Card Board</label>
+                        <select id="card_board"
+                                class="form-control" name="card_board">
+
+                            <option value='0'>
+                                NO
+                            </option>
+                            <option value='1'>
+                                YES
+                            </option>
+                        </select>
+
+                        <label for="stretch_wrap" class="col-md-4 col-form-label ">Stretch Wrap</label>
+                        <input id="stretch_wrap" type="text"
+                               class="form-control @error('stretch_wrap') is-invalid @enderror"
+                               name="stretch_wrap" value="{{ old('stretch_wrap')??'Std' }}"
+                               autocomplete="stretch_wrap" autofocus>
+
+                        @error('stretch_wrap')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+                        <label for="cont_size" class="col-md-4 col-form-label ">Cont.Size</label>
+                        <input id="cont_size" type="text"
+                               class="form-control @error('cont_size') is-invalid @enderror"
+                               name="cont_size" value="{{ old('cont_size')??'20FT' }}"
+                               autocomplete="cont_size" autofocus>
+
+                        @error('cont_size')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
 
                     </div>
 

@@ -18,7 +18,7 @@ class Order extends Model
 
     public function customers()
     {
-        return $this->belongsTo('App\Customer','customer_id');
+        return $this->belongsTo('App\Customer', 'customer_id');
 
     }
 
@@ -28,6 +28,33 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'order_number', 'run_number','wine_code','COA','LIP','customer_id'
+        'order_number',
+        'run_number',
+        'wine_code',
+        'COA',
+        'LIP',
+        'customer_id',
+        'cartons_direction',
+        'bottles_direction',
+        'back',
+        'front',
+        'neck',
+        'bottle_print',
+        'carton_labels',
+        'turbidity',
+        'do2',
+        'alc_in_tank',
+        'alc_on_label',
+        'additives',
+        'delivered_by',
+        'required_by',
+        'pack_size',
+        'samples_required',
+        'cases_required',
+        'cont_size',
+'stretch_wrap',
+'card_board',
+'slip_sheet',
+'run_length',
     ];
 }

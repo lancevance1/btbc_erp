@@ -69,7 +69,7 @@
                         @enderror
 
                         <label for="price" class="col-md-4 col-form-label ">Price</label>
-                        <input id="price" type="number"
+                        <input id="price" type="number" placeholder="Insert Price..." step="0.01"
                                class="form-control @error('price') is-invalid @enderror"
                                name="price" value="{{ old('price') }}"
                                 autocomplete="price" autofocus>
