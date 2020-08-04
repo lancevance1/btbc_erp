@@ -64,6 +64,18 @@
                                     </span>
                         @enderror
 
+                        <label for="baf_number" class="col-md-4 col-form-label ">BAF Number</label>
+                        <input id="baf_number" type="text"
+                               class="form-control @error('baf_number') is-invalid @enderror"
+                               name="baf_number" value="{{ old('baf_number') ??$order->baf_number}}"
+                               autocomplete="baf_number" autofocus placeholder="BA123">
+
+                        @error('baf_number')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
                         <label for="cases_required" class="col-md-4 col-form-label ">Cases Required</label>
                         <input id="cases_required" type="number"
                                class="form-control @error('cases_required') is-invalid @enderror"

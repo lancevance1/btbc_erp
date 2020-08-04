@@ -99,7 +99,7 @@ class OrderController extends Controller
             'card_board'=> '',
             'slip_sheet'=> '',
             'run_length'=> '',
-
+'baf_number'=>'',
 
             'wine'=>'required',
             'bottle' => 'required',
@@ -123,8 +123,8 @@ class OrderController extends Controller
             $order = Order::create($data);
 //            $order->customer_id = $data['customer'];
 //            $order->push();
-//            $order->COA = $data['COA'];
-    //         $order->save();
+            $order->baf_number = strtoupper($data['baf_number']);
+             $order->save();
             $order->products()->attach($data['wine'], ['quantity' => $data['quantity_wine']]);
             $order->products()->attach($data['bottle'], ['quantity' => $data['quantity_bottle']]);
             $order->products()->attach($data['cork'], ['quantity' => $data['quantity_cork']]);
@@ -305,10 +305,13 @@ class OrderController extends Controller
                 'quantity_carton' => 'required',
                 'quantity_divider' => 'required',
                 'quantity_pallet' => 'required',
+                'baf_number'=>'',
             ]);
 
 
             $order->update($data);
+            $order->baf_number = strtoupper($data['baf_number']);
+            $order->save();
             //dd($data);
             $order->products()->sync([$data['wine'],$data['bottle'], $data['cork'], $data['capsule'], $data['screw_cap'], $data['carton'], $data['divider'], $data['pallet']]);
             $order->products()->updateExistingPivot($data['wine'], ['quantity' => $data['quantity_wine']]);
@@ -330,6 +333,12 @@ class OrderController extends Controller
 
     }
 
+    /**
+     * softly delete records in orders table
+     *
+     * @param Order $order
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function destroy(Order $order)
     {
 
@@ -341,6 +350,12 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * reverse deleted records
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function reverse(Request $request)
     {
         //dd($request->id);
@@ -348,6 +363,11 @@ class OrderController extends Controller
         return redirect('orders/')->with('status', 'Order restored');
     }
 
+    /**
+     * permanently delete records in orders table
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function forceDestroy(Request $request)
     {
         //dd($request);
@@ -359,6 +379,12 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * export data from database to Excel
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function export(Request $request)
     {
 
@@ -389,9 +415,11 @@ class OrderController extends Controller
 
         // manipulate cells
         $contacts = $order->customers->contacts;
+        $specs = $order->pallets;
         $str='C';
         $str1 = 'I';
 
+        //dd($specs);
         for ($i=0; $i<sizeof($contacts);$i++){
             $cell_name = $str.'7';
             $cell_email = $str.'9';
@@ -407,6 +435,16 @@ class OrderController extends Controller
             $str1++;
             $str1++;
             //dd($str);
+        }
+        $str='C';
+        for ($i=0; $i<sizeof($specs);$i++){
+            $cell_cartons_per_layer = $str.'49';
+            $cell_layers_per_pallet = $str.'50';
+            $cell_cartons_per_pallet = $str.'51';
+            $sheet->setCellValue($cell_cartons_per_layer, $specs[$i]->cartons_per_layer);
+            $sheet->setCellValue($cell_layers_per_pallet, $specs[$i]->layers_per_pallet);
+            $sheet->setCellValue($cell_cartons_per_pallet, $specs[$i]->cartons_per_layer*$specs[$i]->layers_per_pallet);
+            $str++;
         }
 
         $sheet->setCellValue('C6', $order->customers->name);
@@ -435,7 +473,7 @@ class OrderController extends Controller
         $sheet->setCellValue('C53', $order->card_board);
         $sheet->setCellValue('C54', $order->stretch_wrap);
         $sheet->setCellValue('C55', $order->cont_size);
-
+        $sheet->setCellValue('J4', $order->baf_number);
 
         if($order->bottles_direction === 'upright'){
             $sheet->setCellValue('I48', 'X');
@@ -502,12 +540,12 @@ class OrderController extends Controller
         //$sheet->setCellValue('', $pallet->descrition);
 
         //dd($bottle->pivot->quantity);
-        $sheet->setCellValue('I30', $bottle->pivot->quantity);
-        $sheet->setCellValue('I31', $cork->pivot->quantity);
-        $sheet->setCellValue('I32', $capsule->pivot->quantity);
-        $sheet->setCellValue('I33', $screw_cap->pivot->quantity);
-        $sheet->setCellValue('I35', $carton->pivot->quantity);
-        $sheet->setCellValue('I36', $divider->pivot->quantity);
+        $sheet->setCellValue('H30', $bottle->pivot->quantity);
+        $sheet->setCellValue('H31', $cork->pivot->quantity);
+        $sheet->setCellValue('H32', $capsule->pivot->quantity);
+        $sheet->setCellValue('H33', $screw_cap->pivot->quantity);
+        $sheet->setCellValue('H35', $carton->pivot->quantity);
+        $sheet->setCellValue('H36', $divider->pivot->quantity);
         //$sheet->setCellValue('I37', $bottle->pivot->quantity);
 
         // create a file name

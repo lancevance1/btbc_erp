@@ -33,6 +33,7 @@ Route::resources([
     'products' => 'ProductController',
     'customers' => 'CustomerController',
     'customers.contacts' => 'ContactController',
+    'orders.pallets'=> 'PalletController',
 
 ]);
 //Route::get('/orders/create', 'OrderController@create')->name('orders.create');

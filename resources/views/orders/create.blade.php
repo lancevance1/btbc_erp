@@ -57,6 +57,19 @@
 
 
 
+                        <label for="baf_number" class="col-md-4 col-form-label ">BAF Number</label>
+                        <input id="baf_number" type="text"
+                               class="form-control @error('baf_number') is-invalid @enderror"
+                               name="baf_number" value="{{ old('baf_number') }}"
+                               autocomplete="baf_number" autofocus
+                               placeholder="BA123" >
+
+                        @error('baf_number')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
                         <label for="run_number" class="col-md-4 col-form-label ">Run No.</label>
                         <input id="run_number" type="number"
                                class="form-control @error('run_number') is-invalid @enderror"

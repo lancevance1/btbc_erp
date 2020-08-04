@@ -24,6 +24,12 @@
 
 
                         @foreach ($orders ?? '' as $order)
+                                <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"
+                                        type="button" class="btn btn-secondary">Create Pallets Specs
+                                </button>
+                                <button onclick="location.href='/orders/{{ $order->id}}/pallets'"
+                                        type="button" class="btn btn-secondary">Show Pallets Specs
+                                </button>
                             <form action="/orders/{{$order->id}}" method="POST">
                                 @csrf
                                 @method('DELETE')

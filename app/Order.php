@@ -22,6 +22,12 @@ class Order extends Model
 
     }
 
+    public function pallets()
+    {
+        return $this->hasMany('App\Pallet');
+    }
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -56,5 +62,6 @@ class Order extends Model
 'card_board',
 'slip_sheet',
 'run_length',
+        'baf_number',
     ];
 }

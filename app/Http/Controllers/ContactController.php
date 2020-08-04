@@ -23,7 +23,7 @@ class ContactController extends Controller
 //            ->take(10)
 //            ->orderBy('id','DESC')
 //            ->get();
-        return view('contacts.index',compact('contacts'));
+        return view('contacts.index',compact('contacts','customer'));
     }
 
     public function create(Customer $customer)

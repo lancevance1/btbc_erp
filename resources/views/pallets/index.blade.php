@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Contacts')
+@section('title', 'Pallets')
 
 
 @section('content')
@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-header">
                         Welcome {{$user->name ?? ''}} <br/>
-                        <a href="create/">create contact</a>
+                        <a href="pallets/create">create pallets specs</a>
 
                     </div>
 
@@ -26,25 +26,19 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
-                                <th>Fax</th>
+                                <th>Cartons per Layer</th>
+                                <th>Layers per Poallet</th>
                                 <th>Created at</th>
                                 <th>Updated at</th>
 
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($contacts ?? '' as $tmp)
+                            @foreach ($pallets ?? '' as $tmp)
 
                                 <tr>
-                                    <td>{{$tmp->id}}</td>
-                                    <td>{{$tmp->name}}</td>
-                                    <td>{{$tmp->email}}</td>
-                                    <td>{{$tmp->phone}}</td>
-                                    <td>{{$tmp->fax}}</td>
+                                    <td>{{$tmp->cartons_per_layer}}</td>
+                                    <td>{{$tmp->layers_per_pallet}}</td>
                                     <td>{{$tmp->created_at}}</td>
                                     <td>{{$tmp->updated_at}}</td>
                                     <td><form action="{{$tmp->id}}" method="POST">
@@ -53,9 +47,9 @@
                                             <button type="submit" class="btn btn-secondary">Delete {{$tmp->id}}</button>
                                         </form>
 
-                                        </td>
+                                    </td>
                                     <td>
-                                        <button onclick="location.href='{{ $tmp->id}}/edit'"
+                                        <button onclick="location.href='pallets/{{ $tmp->id}}/edit'"
                                                 type="button" class="btn btn-secondary">Edit
                                         </button>
                                     </td>
