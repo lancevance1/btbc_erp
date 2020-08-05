@@ -11,52 +11,70 @@
                         <h1>Add New Dry Good</h1>
                     </div>
                     <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-1 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group row">
 
-                        <label for="type" class="col-md-4 col-form-label ">Type</label>
-                        <select id="type"
-                                class="form-control @error('type') is-invalid @enderror"
-                                name="type"
-                                autofocus>
-                            <option value="wine">Wine</option>
-                            <option value="bottle">Bottle</option>
-                            <option value="cork">Cork</option>
-                            <option value="capsule">Capsule</option>
-                            <option value="screw cap">Screw Cap</option>
-                            <option value="carton">Carton</option>
-                            <option value="divider">Divider</option>
-                            <option value="pallet">Pallet</option>
-                        </select>
-                        @error('type')
-                        <span class="invalid-feedback" role="alert">
+                        <label for="type" class="col-sm-1 col-form-label ">Type</label>
+                        <div class="col-sm-10">
+                            <select id="type"
+                                    class="form-control @error('type') is-invalid @enderror"
+                                    name="type"
+                                    autofocus>
+                                <option value="" selected>Please select type</option>
+                                <option value="wine">Wine</option>
+                                <option value="bottle">Bottle</option>
+                                <option value="cork">Cork</option>
+                                <option value="capsule">Capsule</option>
+                                <option value="screw cap">Screw Cap</option>
+                                <option value="carton">Carton</option>
+                                <option value="divider">Divider</option>
+                                <option value="pallet">Pallet</option>
+                            </select>
+                            @error('type')
+                            <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                        @enderror
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
 
-                        <label for="code" class="col-md-4 col-form-label ">Code</label>
+                        <label for="code" class="col-sm-1 col-form-label ">Code</label>
+                        <div class="col-sm-10">
                         <input id="code" type="text"
                                class="form-control @error('code') is-invalid @enderror"
                                name="code" value="{{ old('code') }}"
-                                autocomplete="code" autofocus>
+                               autocomplete="code" autofocus>
 
                         @error('code')
                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
-
-                        <label for="description" class="col-md-4 col-form-label ">Description</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="description" class="col-sm-2s col-form-label ">Description</label>
+                        <div class="col-sm-10">
                         <input id="description" type="text"
                                class="form-control @error('description') is-invalid @enderror"
                                name="description" value="{{ old('description') }}"
-                                autocomplete="description" autofocus>
+                               autocomplete="description" autofocus>
 
                         @error('description')
                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
 
-                        <label for="size" class="col-md-4 col-form-label ">Size</label>
+                        <label for="size" class="col-sm-1 col-form-label ">Size</label>
                         <input id="size" type="text"
                                class="form-control @error('size') is-invalid @enderror"
                                name="size" value="{{ old('size') }}"
@@ -67,12 +85,13 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
-
+                    </div>
+                    <div class="form-group row">
                         <label for="price" class="col-md-4 col-form-label ">Price</label>
                         <input id="price" type="number" placeholder="Insert Price..." step="0.01"
                                class="form-control @error('price') is-invalid @enderror"
                                name="price" value="{{ old('price') }}"
-                                autocomplete="price" autofocus>
+                               autocomplete="price" autofocus>
 
                         @error('price')
                         <span class="invalid-feedback" role="alert">
@@ -128,7 +147,9 @@
                                     </span>
                         @enderror
 
-                        <label for="current_inventory_value" class="col-md-4 col-form-label ">Current Inventory Value</label>
+                        <label for="current_inventory_value" class="col-md-4 col-form-label ">Current Inventory
+                            Value</label>
+                        <div class="col-sm-10">
                         <input id="current_inventory_value" type="number"
                                class="form-control @error('current_inventory_value') is-invalid @enderror"
                                name="current_inventory_value" value="{{ old('current_inventory_value') }}"
@@ -139,6 +160,7 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
+                        </div>
 
                         <label for="belong_to" class="col-md-4 col-form-label ">Belong to</label>
                         <input id="belong_to" type="text"
@@ -153,11 +175,10 @@
                         @enderror
 
 
-
                     </div>
 
                     <div class="row">
-                        <button type="submit" class="btn btn-primary" >Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
             </div>

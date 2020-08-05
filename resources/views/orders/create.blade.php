@@ -17,16 +17,25 @@
 
 
                         <label for="customer_id" class="col-md-4 col-form-label ">Customer</label>
+                        <div class="col-sm-10">
                         <select id="customer_id"
-                                class="form-control" name="customer_id">
-
+                                class="form-control @error('customer_id') is-invalid @enderror" name="customer_id">
+                            <option value="" >Please select</option>
                             @foreach($customers as $tmp)
-                                <option value='{{$tmp->id}}'>
+                                <option value='{{$tmp->id}}' @if (old('customer_id') == $tmp->id ) selected="selected" @endif>
                                     {{$tmp->name}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('customer_id')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                        </div>
 
+                    </div>
+                        <div class="form-group row">
                         <label for="order_number" class="col-md-4 col-form-label ">Order No.</label>
                         <input id="order_number" type="text"
                                class="form-control @error('order_number') is-invalid @enderror"
@@ -207,15 +216,20 @@
 
                         <label for="carton_labels" class="col-md-4 col-form-label ">Carton Labels</label>
                         <select id="carton_labels"
-                                class="form-control" name="carton_labels">
+                                class="form-control @error('carton_labels') is-invalid @enderror" name="carton_labels">
 
-                            <option value='0'>
+                            <option value='0' @if (old('carton_labels') == '0') selected="selected" @endif>
                                 NO
                             </option>
-                            <option value='1'>
+                            <option value='1' @if (old('carton_labels') == '1') selected="selected" @endif>
                                 YES
                             </option>
                         </select>
+                            @error('carton_labels')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="bottle_print" class="col-md-4 col-form-label ">Bottle Print</label>
                         <input id="bottle_print" type="text"
@@ -270,13 +284,13 @@
                                 class="form-control" name="bottles_direction">
 
 
-                                <option value='upright'>
+                                <option value='upright' @if (old('bottles_direction') == 'upright') selected="selected" @endif>
                                     Upright
                                 </option>
-                            <option value='inverted'>
+                            <option value='inverted' @if (old('bottles_direction') == 'inverted') selected="selected" @endif>
                                 Inverted
                             </option>
-                            <option value='laydown'>
+                            <option value='laydown' @if (old('bottles_direction') == 'laydown') selected="selected" @endif>
                                 Laydown
                             </option>
 
@@ -287,10 +301,10 @@
                                 class="form-control" name="cartons_direction">
 
 
-                            <option value='upright'>
+                            <option value='upright' @if (old('cartons_direction') == 'upright') selected="selected" @endif>
                                 Upright
                             </option>
-                            <option value='inverted'>
+                            <option value='inverted' @if (old('cartons_direction') == 'inverted') selected="selected" @endif>
                                 Inverted
                             </option>
                             o
@@ -315,10 +329,11 @@
                         <label for="COA" class="col-md-4 col-form-label ">COA</label>
                         <select id="COA"
                                 class="form-control" name="COA">
-                                <option value='1'>
+
+                                <option value='1' @if (old('COA') == '1') selected="selected" @endif>
                                     YES
                                 </option>
-                            <option value='0'>
+                            <option value='0' @if (old('COA') == '0') selected="selected" @endif>
                                 NO
                             </option>
                         </select>
@@ -336,10 +351,10 @@
                                 class="form-control" name="LIP">
 
 
-                            <option value='1'>
+                            <option value='1' @if (old('LIP') == '1') selected="selected" @endif>
                                 YES
                             </option>
-                            <option value='0'>
+                            <option value='0' @if (old('LIP') == '0') selected="selected" @endif>
                                 NO
                             </option>
 
@@ -350,14 +365,19 @@
 
                         <label for="wine" class="col-md-4 col-form-label ">Wine</label>
                         <select id="wine"
-                                class="form-control" name="wine">
-
+                                class="form-control @error('wine') is-invalid @enderror" name="wine">
+                            <option value="" >Please select</option>
                             @foreach($wines as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('wine') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('wine')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="quantity_wine" class="col-md-4 col-form-label ">Wine: Quantity</label>
                         <input id="quantity_wine" type="number"
@@ -374,14 +394,20 @@
 
                         <label for="bottle" class="col-md-4 col-form-label ">Bottle</label>
                         <select id="bottle"
-                                class="form-control" name="bottle">
-
+                                class="form-control @error('bottle') is-invalid @enderror" name="bottle">
+                            <option value="" >Please select</option>
                             @foreach($bottles as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('bottle') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('bottle')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+
 
                         <label for="quantity_bottle" class="col-md-4 col-form-label ">Bottle: Quantity</label>
                         <input id="quantity_bottle" type="number"
@@ -397,14 +423,19 @@
 
                         <label for="cork" class="col-md-4 col-form-label ">Cork</label>
                         <select id="cork"
-                                class="form-control" name="cork">
-
+                                class="form-control @error('cork') is-invalid @enderror" name="cork">
+                            <option value="" >Please select</option>
                             @foreach($corks as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('cork') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('cork')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="quantity_cork" class="col-md-4 col-form-label ">Cork: Quantity</label><input
                             id="quantity_cork" type="number"
@@ -420,14 +451,19 @@
 
                         <label for="capsule" class="col-md-4 col-form-label ">Capsule</label>
                         <select id="capsule"
-                                class="form-control" name="capsule">
-
+                                class="form-control @error('capsule') is-invalid @enderror" name="capsule">
+                            <option value="" >Please select</option>
                             @foreach($capsules as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('capsule') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('capsule')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="quantity_capsule" class="col-md-4 col-form-label ">Capsule: Quantity</label>
                         <input id="quantity_capsule" type="number"
@@ -443,14 +479,19 @@
 
                         <label for="screw_cap" class="col-md-4 col-form-label ">Screw Cap</label>
                         <select id="screw_cap"
-                                class="form-control" name="screw_cap">
-
+                                class="form-control @error('screw_cap') is-invalid @enderror" name="screw_cap">
+                            <option value="" >Please select</option>
                             @foreach($screwCaps as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('screw_cap') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('screw_cap')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="quantity_screw_cap" class="col-md-4 col-form-label ">Screw Cap:
                             Quantity</label><input id="quantity_screw_cap" type="number"
@@ -466,14 +507,19 @@
 
                         <label for="carton" class="col-md-4 col-form-label ">Carton</label>
                         <select id="carton"
-                                class="form-control" name="carton">
-
+                                class="form-control @error('carton') is-invalid @enderror" name="carton">
+                            <option value="" >Please select</option>
                             @foreach($cartons as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('carton') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('carton')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="quantity_carton" class="col-md-4 col-form-label ">Carton: Quantity</label><input
                             id="quantity_carton" type="number"
@@ -489,14 +535,19 @@
 
                         <label for="divider" class="col-md-4 col-form-label ">Divider</label>
                         <select id="divider"
-                                class="form-control" name="divider">
-
+                                class="form-control @error('divider') is-invalid @enderror" name="divider">
+                            <option value="" >Please select</option>
                             @foreach($dividers as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('divider') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
+                            @error('divider')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
 
                         <label for="quantity_divider" class="col-md-4 col-form-label ">Divider: Quantity</label><input
                             id="quantity_divider" type="number"
@@ -513,48 +564,38 @@
                         <label for="pallet" class="col-md-4 col-form-label ">Pallet</label>
                         <select id="pallet"
                                 class="form-control" name="pallet">
-
+                            <option value="" >Please select</option>
                             @foreach($pallets as $product)
-                                <option value='{{$product->id}}'>
+                                <option value='{{$product->id}}' @if (old('pallet') == $product->id) selected="selected" @endif>
                                     {{$product->code}}
                                 </option>
                             @endforeach
                         </select>
 
-                        <label for="quantity_pallet" class="col-md-4 col-form-label ">Pallet: Quantity</label><input
-                            id="quantity_pallet" type="number"
-                            class="form-control @error('quantity_pallet') is-invalid @enderror"
-                            name="quantity_pallet" value="{{ old('quantity_pallet') }}"
-                            autocomplete="quantity_pallet" autofocus>
 
-                        @error('quantity_pallet')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
 
 
                         <label for="run_length" class="col-md-4 col-form-label ">Run Length</label>
                         <select id="run_length"
                                 class="form-control" name="run_length">
 
-
-                            <option value='Exact Cases'>
+                            <option value="" >Please select</option>
+                            <option value='Exact Cases' @if (old('run_length') == 'Exact Cases') selected="selected" @endif>
                                 Exact Cases
                             </option>
-                            <option value='Run Out Labels'>
+                            <option value='Run Out Labels' @if (old('run_length') == 'Run Out Labels') selected="selected" @endif>
                                 Run Out Labels
                             </option>
-                            <option value='Run Out Glass'>
+                            <option value='Run Out Glass' @if (old('run_length') == 'Run Out Glass') selected="selected" @endif>
                                 Run Out Glass
                             </option>
-                            <option value='Run Out Cartons'>
+                            <option value='Run Out Cartons' @if (old('run_length') == 'Run Out Cartons') selected="selected" @endif>
                                 Run Out Cartons
                             </option>
-                            <option value='Run Out Caps'>
+                            <option value='Run Out Caps' @if (old('run_length') == 'Run Out Caps') selected="selected" @endif>
                                 Run Out Caps
                             </option>
-                            <option value='Run Out Corks'>
+                            <option value='Run Out Corks' @if (old('run_length') == 'Run Out Corks') selected="selected" @endif>
                                 Run Out Corks
                             </option>
 
@@ -564,11 +605,11 @@
                         <label for="slip_sheet" class="col-md-4 col-form-label ">Slip Sheet</label>
                         <select id="slip_sheet"
                                 class="form-control" name="slip_sheet">
-
-                            <option value='0'>
+                            <option value="" >Please select</option>
+                            <option value='0' @if (old('slip_sheet') == '0') selected="selected" @endif>
                                 NO
                             </option>
-                            <option value='1'>
+                            <option value='1' @if (old('slip_sheet') == '1') selected="selected" @endif>
                                 YES
                             </option>
                         </select>
@@ -576,11 +617,11 @@
                         <label for="card_board" class="col-md-4 col-form-label ">Card Board</label>
                         <select id="card_board"
                                 class="form-control" name="card_board">
-
-                            <option value='0'>
+                            <option value="" >Please select</option>
+                            <option value='0' @if (old('card_board') == '0') selected="selected" @endif>
                                 NO
                             </option>
-                            <option value='1'>
+                            <option value='1' @if (old('card_board') == '1') selected="selected" @endif>
                                 YES
                             </option>
                         </select>

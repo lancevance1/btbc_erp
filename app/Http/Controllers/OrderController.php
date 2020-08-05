@@ -69,7 +69,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $str = '';
-        try {
+
         $data = $request->validate([
             'order_number' => 'required',
             'run_number' => 'required',
@@ -102,24 +102,24 @@ class OrderController extends Controller
 'baf_number'=>'',
 
             'wine'=>'required',
-            'bottle' => 'required',
-            'cork' => 'required',
-            'capsule' => 'required',
-            'screw_cap' => 'required',
-            'carton' => 'required',
-            'divider' => 'required',
+            'bottle' => '',
+            'cork' => '',
+            'capsule' => '',
+            'screw_cap' => '',
+            'carton' => '',
+            'divider' => '',
             'pallet' => 'required',
-            'quantity_wine'=>'required',
-            'quantity_bottle' => 'required',
-            'quantity_cork' => 'required',
-            'quantity_capsule' => 'required',
-            'quantity_screw_cap' => 'required',
-            'quantity_carton' => 'required',
-            'quantity_divider' => 'required',
-            'quantity_pallet' => 'required',
+            'quantity_wine' => 'required_with:wine',
+            'quantity_bottle' => 'required_with:bottle',
+            'quantity_cork' => 'required_with:cork',
+            'quantity_capsule' => 'required_with:capsule',
+            'quantity_screw_cap' => 'required_with:screw_cap',
+            'quantity_carton' => 'required_with:carton',
+            'quantity_divider' => 'required_with:divider',
+
         ]);
         //dd($data);
-
+        try {
             $order = Order::create($data);
 //            $order->customer_id = $data['customer'];
 //            $order->push();
@@ -297,14 +297,14 @@ class OrderController extends Controller
                 'carton' => 'required',
                 'divider' => 'required',
                 'pallet' => 'required',
-                'quantity_wine' => 'required',
-                'quantity_bottle' => 'required',
-                'quantity_cork' => 'required',
-                'quantity_capsule' => 'required',
-                'quantity_screw_cap' => 'required',
-                'quantity_carton' => 'required',
-                'quantity_divider' => 'required',
-                'quantity_pallet' => 'required',
+                'quantity_wine' => 'required_with:wine',
+                'quantity_bottle' => 'required_with:bottle',
+                'quantity_cork' => 'required_with:cork',
+                'quantity_capsule' => 'required_with:capsule',
+                'quantity_screw_cap' => 'required_with:screw_cap',
+                'quantity_carton' => 'required_with:carton',
+                'quantity_divider' => 'required_with:divider',
+
                 'baf_number'=>'',
             ]);
 
