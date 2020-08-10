@@ -43,7 +43,7 @@
                             <a class="nav-link" href="/dashboard">Dashboard </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/orders">Orders</a>
+                            <a class="nav-link" href="/orders">Orders (BAF)</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/products">Dry Goods</a>

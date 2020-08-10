@@ -193,7 +193,7 @@ class OrderController extends Controller
         if ($str == '') {
             return redirect('orders/')->with('status', 'New order created');
         } else {
-            return redirect('orders/')->with('status', $str);
+            return redirect('orders/')->with('error', $str);
         }
 
     }
@@ -347,6 +347,7 @@ class OrderController extends Controller
             return \redirect('orders/')->with('status', 'Successfully Deleted');
         } catch (\Exception $e) {
             echo $e;
+            return redirect('orders/')->with('error', 'Order delete failed');
         }
     }
 
@@ -359,8 +360,13 @@ class OrderController extends Controller
     public function reverse(Request $request)
     {
         //dd($request->id);
-        $tmp = Order::onlyTrashed()->where('id',$request->id)->restore();
-        return redirect('orders/')->with('status', 'Order restored');
+        try {
+            $tmp = Order::onlyTrashed()->where('id',$request->id)->restore();
+            return redirect('orders/')->with('status', 'Order restored');
+        }catch (\Exception $e){
+            return redirect('orders/')->with('error', 'Order restore failed');
+        }
+
     }
 
     /**
@@ -376,6 +382,7 @@ class OrderController extends Controller
             return \redirect('orders/')->with('status', 'Permanently Deleted');
         } catch (\Exception $e) {
             echo $e;
+            return \redirect('orders/')->with('error', 'Order permanently delete failed');
         }
     }
 
@@ -563,7 +570,7 @@ class OrderController extends Controller
         if($log==null){
             return redirect('orders/')->with('status', 'Excel created');
         }else{
-            return redirect('orders/')->with('status', $log);
+            return redirect('orders/')->with('error', $log);
         }
 
     }
