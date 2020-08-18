@@ -83,6 +83,7 @@ return redirect('customers/')->with('status','Customer modified');
     public function destroy(Customer $customer)
     {
         try {
+            $customer->contacts()->delete();
             $customer->delete();
             return \redirect('customers')->with('status','Successfully Deleted');
         } catch (\Exception $e) {

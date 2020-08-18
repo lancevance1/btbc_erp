@@ -1924,9 +1924,114 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    var str = 'bottle';
+    return {
+      products: [],
+      str: str,
+      response: []
+    };
+  },
   mounted: function mounted() {
+    this.loadProducts();
     console.log('Component mounted.');
+  },
+  methods: {
+    loadProducts: function loadProducts() {
+      var _this = this;
+
+      axios.get('/api/products').then(function (response) {
+        _this.products = response.data.data;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    test: function test(str) {
+      console.log(str);
+      this.str = str;
+    },
+    deleteProd: function deleteProd(prod) {
+      var _this2 = this;
+
+      axios["delete"]('/api/products/' + prod.id).then(function (response) {
+        _this2.response = response.data.data;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+      console.log(this.response);
+    }
   }
 });
 
@@ -37475,28 +37580,166 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("a", { attrs: { href: "/products/create" } }, [
+              _vm._v("Create a dry good")
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-info",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.test("bottle")
+                  }
+                }
+              },
+              [_vm._v("Bottle")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-info",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.test("carton")
+                  }
+                }
+              },
+              [_vm._v("Carton")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-info",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.test("capsule")
+                  }
+                }
+              },
+              [_vm._v("Capsule")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-info",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.test("divider")
+                  }
+                }
+              },
+              [_vm._v("Divider")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "table-responsive" }, [
+              _c("table", { staticClass: "table" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.products, function($product) {
+                    return $product.type === _vm.str
+                      ? _c("tr", [
+                          _c("td", [
+                            _vm._v(_vm._s($product.type) + "\n\n"),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                attrs: { type: "submit" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.deleteProd($product)
+                                  }
+                                }
+                              },
+                              [_vm._v("Delete")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "a",
+                              { attrs: { href: "/products/" + $product.id } },
+                              [_vm._v(_vm._s($product.code))]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s($product.description))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s($product.price))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s($product.cost))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s($product.current_inventory))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s($product.order_quantity))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s($product.to_be_ordered))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s($product.current_inventory_value))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s($product.belong_to))])
+                        ])
+                      : _vm._e()
+                  }),
+                  0
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Type")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Code")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Description")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Price")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cost")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Current Inventory")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Order Quantity")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("To be ordered")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Current Inventory Value")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Belong to")])
       ])
     ])
   }

@@ -10,16 +10,11 @@
                     <div class="row">
                         <h1>Add New Dry Good</h1>
                     </div>
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-1 col-form-label">Email</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-                        </div>
-                    </div>
+
                     <div class="form-group row">
 
-                        <label for="type" class="col-sm-1 col-form-label ">Type</label>
-                        <div class="col-sm-10">
+                        <label for="type" class="col-md-4 col-form-label ">Type</label>
+
                             <select id="type"
                                     class="form-control @error('type') is-invalid @enderror"
                                     name="type"
@@ -39,12 +34,11 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                             @enderror
-                        </div>
-                    </div>
-                    <div class="form-group row">
 
-                        <label for="code" class="col-sm-1 col-form-label ">Code</label>
-                        <div class="col-sm-10">
+
+
+                        <label for="code" class="col-md-4 col-form-label ">Code</label>
+
                         <input id="code" type="text"
                                class="form-control @error('code') is-invalid @enderror"
                                name="code" value="{{ old('code') }}"
@@ -55,11 +49,10 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="description" class="col-sm-2s col-form-label ">Description</label>
-                        <div class="col-sm-10">
+
+
+                        <label for="description" class="col-md-4 col-form-label ">Description</label>
+
                         <input id="description" type="text"
                                class="form-control @error('description') is-invalid @enderror"
                                name="description" value="{{ old('description') }}"
@@ -70,11 +63,10 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
-                        </div>
-                    </div>
-                    <div class="form-group row">
 
-                        <label for="size" class="col-sm-1 col-form-label ">Size</label>
+
+
+                        <label for="size" class="col-md-4 col-form-label ">Size</label>
                         <input id="size" type="text"
                                class="form-control @error('size') is-invalid @enderror"
                                name="size" value="{{ old('size') }}"
@@ -149,7 +141,7 @@
 
                         <label for="current_inventory_value" class="col-md-4 col-form-label ">Current Inventory
                             Value</label>
-                        <div class="col-sm-10">
+
                         <input id="current_inventory_value" type="number"
                                class="form-control @error('current_inventory_value') is-invalid @enderror"
                                name="current_inventory_value" value="{{ old('current_inventory_value') }}"
@@ -160,7 +152,7 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
-                        </div>
+
 
                         <label for="belong_to" class="col-md-4 col-form-label ">Belong to</label>
                         <input id="belong_to" type="text"

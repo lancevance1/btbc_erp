@@ -3,7 +3,8 @@
 
 @section('content')
     <div class="container">
-        <form action="/products/{{$product->id}}" enctype="multipart/form-data" method="post">
+
+            <form action="/products/{{$product->id}}" enctype="multipart/form-data" method="post">
             @csrf
             @method('PATCH')
 
@@ -174,5 +175,6 @@
                 </div>
             </div>
         </form>
+            </div>
     </div>
 @endsection

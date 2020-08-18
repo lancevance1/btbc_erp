@@ -15,10 +15,11 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = DB::table('products')
-            ->take(10)
-            ->orderBy('id','DESC')
-            ->get();
+//        $products = DB::table('products')
+//            ->take(10)
+//            ->orderBy('id','DESC')
+//            ->get();
+        $products = Product::all();
         return view('products.index',compact('products'));
     }
 
@@ -98,4 +99,6 @@ class ProductController extends Controller
             echo $e;
         }
     }
+
+
 }

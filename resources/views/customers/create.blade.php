@@ -37,7 +37,7 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
-                        <a href="/contacts/create">create contact</a>
+
 
                     </div>
 

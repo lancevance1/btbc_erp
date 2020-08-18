@@ -85,6 +85,7 @@ class PalletController extends Controller
     public function destroy(Order $order,Pallet $pallet)
     {
         try {
+
             $pallet->delete();
             return \redirect('orders')->with('status','Successfully Deleted');
         } catch (\Exception $e) {

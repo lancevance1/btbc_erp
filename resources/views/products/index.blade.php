@@ -3,13 +3,15 @@
 
 
 @section('content')
+
+    <script src="{{ asset('js/test.js')}}"></script>
+
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        Welcome {{$user->name ?? ''}} <br/>
-                        Dry Goods<a href="/products/create">create dry good</a>
+                        <a href="/products/create">Create a dry good</a>
 
                     </div>
 
@@ -22,11 +24,11 @@
                         @endif
 
 
-
+                        <div class="table-responsive">
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Id</th>
+
                                 <th>Type</th>
                                 <th>Code</th>
                                 <th>Description</th>
@@ -45,9 +47,22 @@
                             @foreach ($products ?? '' as $product)
 
                                 <tr>
-                                    <td>{{$product->id}}</td>
-                                    <td>{{$product->type}}</td>
-                                    <td>{{$product->code}}</td>
+
+
+
+                                    <td>{{$product->type}}
+                                        <button onclick="location.href='/products/{{ $product->id}}/edit'"
+                                                type="button" class="btn btn-secondary">Edit
+                                        </button>
+                                        <form action="/products/{{$product->id}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-secondary">Delete</button>
+                                        </form>
+                                    </td>
+                                    <td><a href="/products/{{$product->id}}">{{$product->code}}</a>
+
+                                    </td>
                                     <td>{{$product->description}}</td>
                                     <td>{{$product->price}}</td>
                                     <td>{{$product->cost}}</td>
@@ -58,60 +73,20 @@
                                     <td>{{$product->belong_to}}</td>
                                     <td>{{$product->created_at}}</td>
                                     <td>{{$product->updated_at}}</td>
-                                    <td><form action="/products/{{$product->id}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-secondary">Delete {{$product->id}}</button>
-                                        </form>
 
-                                        </td>
-                                    <td>
-                                        <button onclick="location.href='/products/{{ $product->id}}/edit'"
-                                                type="button" class="btn btn-secondary">Edit
-                                        </button>
-                                    </td>
                                 </tr>
+
                             @endforeach
                             </tbody>
                         </table>
+                        </div>
 
-                        @foreach ($products ?? '' as $product)
-                            <form action="/products/{{$product->id}}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-secondary">Delete {{$product->id}}</button>
-                            </form>
 
-                            <button onclick="location.href='/products/{{ $product->id}}/edit'"
-                                    type="button" class="btn btn-secondary">Edit
-                            </button>
-
-                            <a href="/products/{{$product->id}}">
-                                <p>
-                                    Type: {{$product->type}}
-                                    Code: {{ $product->code }}
-                                    Description: {{ $product->description }}
-                                    Price: {{ $product->price }}
-                                    Cost: {{$product->cost}}
-                                    Current Inventory: {{$product->current_inventory}}
-                                    Order Quantity: {{$product->order_quantity}}
-                                    To be ordered: {{$product->to_be_ordered}}
-                                    Current Inventory Value: {{$product->current_inventory_value}}
-                                    Belong to: {{$product->belong_to}}
-                                    Created at: {{ $product->created_at }}
-                                    Updated at: {{ $product->updated_at }}</p>
-                                <br/>
-                            </a>
-
-                        @endforeach
                     </div>
 
                 </div>
             </div>
         </div>
-        {{--    {{$name ?? ''}}--}}
-        <div class="row">
-            <div class="col-3"></div>
-        </div>
+
     </div>
 @endsection
