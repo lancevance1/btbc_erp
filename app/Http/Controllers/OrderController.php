@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -18,20 +19,75 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class OrderController extends Controller
 {
 
+    private $rules = [
+        'order_number' => 'required',
+        'run_number' => 'required',
+        'customer_id' => 'required',
+        'COA' => 'required',
+        'LIP' => 'required',
+        'cartons_direction' => 'required',
+        'bottles_direction' => 'required',
+        'back' => '',
+        'front' => '',
+        'neck' => '',
+        'bottle_print' => '',
+        'carton_labels' => '',
+        'turbidity' => '',
+        'do2' => '',
+        'alc_in_tank' => '',
+        'alc_on_label' => '',
+        'additives' => '',
+        'delivered_by' => '',
+        'required_by' => '',
+        'pack_size' => 'required',
+        'samples_required' => 'required',
+        'cases_required' => 'required',
+
+        'cont_size' => '',
+        'stretch_wrap' => '',
+        'card_board' => '',
+        'slip_sheet' => '',
+        'run_length' => '',
+        'baf_number' => '',
+
+        'wine' => 'required',
+        'bottle' => '',
+        'cork' => '',
+        'capsule' => '',
+        'screw_cap' => '',
+        'carton' => '',
+        'divider' => '',
+        'pallet' => 'required',
+        'quantity_wine' => 'required_with:wine',
+        'quantity_bottle' => 'required_with:bottle',
+        'quantity_cork' => 'required_with:cork',
+        'quantity_capsule' => 'required_with:capsule',
+        'quantity_screw_cap' => 'required_with:screw_cap',
+        'quantity_carton' => 'required_with:carton',
+        'quantity_divider' => 'required_with:divider',
+
+        'quantity_wine_external' => 'required_with:wine',
+        'quantity_bottle_external' => 'required_with:bottle',
+        'quantity_cork_external' => 'required_with:cork',
+        'quantity_capsule_external' => 'required_with:capsule',
+        'quantity_screw_cap_external' => 'required_with:screw_cap',
+        'quantity_carton_external' => 'required_with:carton',
+        'quantity_divider_external' => 'required_with:divider',
+    ];
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
 
-
     public function index()
     {
         $total_orders = Order::whereNull('deleted_at')->count();
 
-        $orders = Order::whereNull('deleted_at')->take(10)->orderBy('created_at', 'DESC')->get();
+        $orders = Order::whereNull('deleted_at')->orderBy('created_at', 'DESC')->get();
         $orders_soft_deleted = Order::onlyTrashed()->get();
-        return view('orders.index', compact('orders', 'total_orders','orders_soft_deleted'));
+        return view('orders.index', compact('orders', 'total_orders', 'orders_soft_deleted'));
     }
 
     public function create(Request $request)
@@ -63,7 +119,7 @@ class OrderController extends Controller
             ->get();
 
         $customers = Customer::all();
-        return view('orders.create', compact('wines','bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets','customers'));
+        return view('orders.create', compact('wines', 'bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets', 'customers'));
     }
 
     public function store(Request $request)
@@ -76,32 +132,32 @@ class OrderController extends Controller
             'customer_id' => 'required',
             'COA' => 'required',
             'LIP' => 'required',
-            'cartons_direction'=> 'required',
-            'bottles_direction'=> 'required',
-            'back'=> '',
-            'front'=> '',
-            'neck'=> '',
-            'bottle_print'=> '',
-            'carton_labels'=> '',
-            'turbidity'=> '',
-            'do2'=> '',
-            'alc_in_tank'=> '',
-            'alc_on_label'=> '',
-            'additives'=> '',
-            'delivered_by'=> '',
-            'required_by'=> '',
-            'pack_size'=> 'required',
-            'samples_required'=> 'required',
-            'cases_required'=> 'required',
+            'cartons_direction' => 'required',
+            'bottles_direction' => 'required',
+            'back' => '',
+            'front' => '',
+            'neck' => '',
+            'bottle_print' => '',
+            'carton_labels' => '',
+            'turbidity' => '',
+            'do2' => '',
+            'alc_in_tank' => '',
+            'alc_on_label' => '',
+            'additives' => '',
+            'delivered_by' => '',
+            'required_by' => '',
+            'pack_size' => 'required',
+            'samples_required' => 'required',
+            'cases_required' => 'required',
 
-            'cont_size'=> '',
-            'stretch_wrap'=> '',
-            'card_board'=> '',
-            'slip_sheet'=> '',
-            'run_length'=> '',
-'baf_number'=>'',
+            'cont_size' => '',
+            'stretch_wrap' => '',
+            'card_board' => '',
+            'slip_sheet' => '',
+            'run_length' => '',
+            'baf_number' => '',
 
-            'wine'=>'required',
+            'wine' => 'required',
             'bottle' => '',
             'cork' => '',
             'capsule' => '',
@@ -117,6 +173,14 @@ class OrderController extends Controller
             'quantity_carton' => 'required_with:carton',
             'quantity_divider' => 'required_with:divider',
 
+            'quantity_wine_external' => 'required_with:wine',
+            'quantity_bottle_external' => 'required_with:bottle',
+            'quantity_cork_external' => 'required_with:cork',
+            'quantity_capsule_external' => 'required_with:capsule',
+            'quantity_screw_cap_external' => 'required_with:screw_cap',
+            'quantity_carton_external' => 'required_with:carton',
+            'quantity_divider_external' => 'required_with:divider',
+
         ]);
         //dd($data);
         try {
@@ -124,72 +188,21 @@ class OrderController extends Controller
 //            $order->customer_id = $data['customer'];
 //            $order->push();
             $order->baf_number = strtoupper($data['baf_number']);
-             $order->save();
-            $order->products()->attach($data['wine'], ['quantity' => $data['quantity_wine']]);
-            $order->products()->attach($data['bottle'], ['quantity' => $data['quantity_bottle']]);
-            $order->products()->attach($data['cork'], ['quantity' => $data['quantity_cork']]);
-            $order->products()->attach($data['capsule'], ['quantity' => $data['quantity_capsule']]);
-            $order->products()->attach($data['screw_cap'], ['quantity' => $data['quantity_screw_cap']]);
-            $order->products()->attach($data['carton'], ['quantity' => $data['quantity_carton']]);
-            $order->products()->attach($data['divider'], ['quantity' => $data['quantity_divider']]);
-            $order->products()->attach($data['pallet'], ['quantity' => $data['quantity_pallet']]);
+            $order->save();
+            $order->products()->attach($data['wine'], ['quantity' => $data['quantity_wine'], 'quantity_external' => $data['quantity_wine_external']]);
+            $order->products()->attach($data['bottle'], ['quantity' => $data['quantity_bottle'], 'quantity_external' => $data['quantity_bottle_external']]);
+            $order->products()->attach($data['cork'], ['quantity' => $data['quantity_cork'], 'quantity_external' => $data['quantity_cork_external']]);
+            $order->products()->attach($data['capsule'], ['quantity' => $data['quantity_capsule'], 'quantity_external' => $data['quantity_capsule_external']]);
+            $order->products()->attach($data['screw_cap'], ['quantity' => $data['quantity_screw_cap'], 'quantity_external' => $data['quantity_screw_cap_external']]);
+            $order->products()->attach($data['carton'], ['quantity' => $data['quantity_carton'], 'quantity_external' => $data['quantity_carton_external']]);
+            $order->products()->attach($data['divider'], ['quantity' => $data['quantity_divider'], 'quantity_external' => $data['quantity_divider_external']]);
+            $order->products()->attach($data['pallet']);
+
         } catch (\Exception $e) {
             $str = $e->getMessage();
             //echo $e;
         }
 
-
-//        $success = false;
-//        DB::beginTransaction();
-//        try {
-//            $order = new Order();
-//            $data = $request->validate([
-//            'order_number' => 'required',
-//            'run_number' => 'required',
-//            'wine_code' => 'required',
-//                'bottle' => 'required',
-//                'cork' => 'required',
-//                'capsule' => 'required',
-//                'screw_cap' => 'required',
-//                'carton' => 'required',
-//                'divider' => 'required',
-//                'pallet' => 'required',
-//
-//        ]);
-//
-//                $order->order_number = $data['order_number'];
-//                $order->wine_code = $data['wine_code'];
-//                $order->run_number = $data['run_number'];
-//
-//            //dd($data);
-//
-//            if ($order->save()){
-//                //$tmp = Product::find(2);
-//                $order->products()->attach($data['bottle']);
-//                $order->products()->attach($data['cork']);
-//                $order->products()->attach($data['capsule']);
-//                $order->products()->attach($data['screw_cap']);
-//                $order->products()->attach($data['carton']);
-//                $order->products()->attach($data['divider']);
-//                $order->products()->attach($data['pallet']);
-////                $order->products->pivot->
-//
-//                $success = true;
-//            }
-//
-//        } catch (\Exception $e) {
-//            // maybe log this exception, but basically it's just here so we can rollback if we get a surprise
-//            //echo $e;
-//        }
-//
-//        if ($success) {
-//
-//            DB::commit();
-//            return \redirect('orders/')->with('status','Post saved');
-//        } else {
-//            DB::rollback();
-//            return \redirect('orders/')->with('status','Something went wrong');
-//        }
         if ($str == '') {
             return redirect('orders/')->with('status', 'New order created');
         } else {
@@ -200,9 +213,19 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        return view('orders.show', [
-            'order' => $order,
-        ]);
+        // get dynamic options
+        $wines = $order->products->where('type', 'wine');
+        $bottles = $order->products->where('type', 'bottle');
+        $corks = $order->products->where('type', 'cork');
+        $capsules = $order->products->where('type', 'capsule');
+        $screwCaps = $order->products->where('type', 'screw cap');
+        $cartons = $order->products->where('type', 'carton');
+        $dividers = $order->products->where('type', 'divider');
+        $pallets = $order->products->where('type', 'pallet');
+        //dd($pallets);
+        $customers = $order->customers;
+
+        return view('orders.show', compact('wines', 'order', 'bottles', 'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets', 'customers'));
     }
 
     public function edit(Order $order)
@@ -240,16 +263,18 @@ class OrderController extends Controller
         $current_wine = $order->products->where('type', 'wine')->first();
         $current_bottle = $order->products->where('type', 'bottle')->first();
         $current_cork = $order->products->where('type', 'cork')->first();
+//        dd($current_cork->id);
         $current_capsule = $order->products->where('type', 'capsule')->first();
+//        dd($current_capsule->id);
         $current_screw_cap = $order->products->where('type', 'screw cap')->first();
         $current_carton = $order->products->where('type', 'carton')->first();
         $current_divider = $order->products->where('type', 'divider')->first();
         $current_pallet = $order->products->where('type', 'pallet')->first();
 
-        return view('orders.edit', compact('order','wines', 'bottles',
-                'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets','customers','current_wine',
+        return view('orders.edit', compact('order', 'wines', 'bottles',
+                'corks', 'capsules', 'screwCaps', 'cartons', 'dividers', 'pallets', 'customers', 'current_wine',
                 'current_bottle', 'current_cork', 'current_capsule', 'current_screw_cap',
-                'current_carton', 'current_divider', 'current_pallet','current_customer')
+                'current_carton', 'current_divider', 'current_pallet', 'current_customer')
 
         );
     }
@@ -257,79 +282,117 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
 
-
-        try {
-            $data = $request->validate([
-                'order_number' => 'required',
-                'run_number' => 'required',
-                'customer_id' => 'required',
-                'COA' => 'required',
-                'LIP' => 'required',
-                'cartons_direction'=> 'required',
-                'bottles_direction'=> 'required',
-                'back'=> '',
-                'front'=> '',
-                'neck'=> '',
-                'bottle_print'=> '',
-                'carton_labels'=> '',
-                'turbidity'=> '',
-                'do2'=> '',
-                'alc_in_tank'=> '',
-                'alc_on_label'=> '',
-                'additives'=> '',
-                'delivered_by'=> '',
-                'required_by'=> '',
-                'pack_size'=> 'required',
-                'samples_required'=> 'required',
-                'cases_required'=> 'required',
-
-                'cont_size'=> '',
-                'stretch_wrap'=> '',
-                'card_board'=> '',
-                'slip_sheet'=> '',
-                'run_length'=> '',
-
-                'wine' => 'required',
-                'bottle' => 'required',
-                'cork' => 'required',
-                'capsule' => 'required',
-                'screw_cap' => 'required',
-                'carton' => 'required',
-                'divider' => 'required',
-                'pallet' => 'required',
-                'quantity_wine' => 'required_with:wine',
-                'quantity_bottle' => 'required_with:bottle',
-                'quantity_cork' => 'required_with:cork',
-                'quantity_capsule' => 'required_with:capsule',
-                'quantity_screw_cap' => 'required_with:screw_cap',
-                'quantity_carton' => 'required_with:carton',
-                'quantity_divider' => 'required_with:divider',
-
-                'baf_number'=>'',
-            ]);
+        //$validator = Validator::make($request->all(), $this->rules);
 
 
-            $order->update($data);
-            $order->baf_number = strtoupper($data['baf_number']);
-            $order->save();
-            //dd($data);
-            $order->products()->sync([$data['wine'],$data['bottle'], $data['cork'], $data['capsule'], $data['screw_cap'], $data['carton'], $data['divider'], $data['pallet']]);
-            $order->products()->updateExistingPivot($data['wine'], ['quantity' => $data['quantity_wine']]);
-            $order->products()->updateExistingPivot($data['bottle'], ['quantity' => $data['quantity_bottle']]);
-            $order->products()->updateExistingPivot($data['cork'], ['quantity' => $data['quantity_cork']]);
-            $order->products()->updateExistingPivot($data['capsule'], ['quantity' => $data['quantity_capsule']]);
-            $order->products()->updateExistingPivot($data['screw_cap'], ['quantity' => $data['quantity_screw_cap']]);
-            $order->products()->updateExistingPivot($data['carton'], ['quantity' => $data['quantity_carton']]);
-            $order->products()->updateExistingPivot($data['divider'], ['quantity' => $data['quantity_divider']]);
-            $order->products()->updateExistingPivot($data['pallet'], ['quantity' => $data['quantity_pallet']]);
-        } catch (\Exception $e) {
-            echo $e;
+        //process the request
+        $data = $request->validate($this->rules);
+        //dd($data);
+        $order->update($data);
+        $order->baf_number = strtoupper($data['baf_number']);
+        $order->save();
+        $arr = array();
+        $arr1 = array();
+        //dd($data);
+        isset($data['wine']) ? array_push($arr, $data['wine']) : null;
+
+        isset($data['bottle']) ? array_push($arr, $data['bottle']) : null;
+        //dd($data_bottle);
+        isset($data['cork']) ? array_push($arr, $data['cork']) : null;
+        isset($data['capsule']) ? array_push($arr, $data['capsule']) : null;
+        isset($data['screw_cap']) ? array_push($arr, $data['screw_cap']) : null;
+        isset($data['carton']) ? array_push($arr, $data['carton']) : null;
+        isset($data['divider']) ? array_push($arr, $data['divider']) : null;
+        isset($data['pallet']) ? array_push($arr, $data['pallet']) : null;
+        //dd($data['bottle']);
+//dd($arr);
+        $order->products()->sync($arr);
+        if (isset($data['wine'])) {
+            $order->products()->updateExistingPivot($data['wine'], ['quantity' => $data['quantity_wine'], 'quantity_external' => $data['quantity_wine_external']]);
         }
+        if (isset($data['bottle'])) {
+            $order->products()->updateExistingPivot($data['bottle'], ['quantity' => $data['quantity_bottle'], 'quantity_external' => $data['quantity_bottle_external']]);
+        }
+        if (isset($data['cork'])) {
+            $order->products()->updateExistingPivot($data['cork'], ['quantity' => $data['quantity_cork'], 'quantity_external' => $data['quantity_cork_external']]);
+        }
+        if (isset($data['capsule'])) {
+            $order->products()->updateExistingPivot($data['capsule'], ['quantity' => $data['quantity_capsule'], 'quantity_external' => $data['quantity_capsule_external']]);
+        }
+        if (isset($data['screw_cap'])) {
+            $order->products()->updateExistingPivot($data['screw_cap'], ['quantity' => $data['quantity_screw_cap'], 'quantity_external' => $data['quantity_screw_cap_external']]);
+        }
+        if (isset($data['carton'])) {
+            $order->products()->updateExistingPivot($data['carton'], ['quantity' => $data['quantity_carton'], 'quantity_external' => $data['quantity_carton_external']]);
+        }
+        if (isset($data['divider'])) {
+            $order->products()->updateExistingPivot($data['divider'], ['quantity' => $data['quantity_divider'], 'quantity_external' => $data['quantity_divider_external']]);
+        }//                $response['success'] = true;
+//                $response['response'] = "successfully updated";
 
 
-        return view('orders.show', [
-            'order' => $order,
-        ]);
+        return redirect('orders/')->with('status', 'New order created');
+
+//            $data = $request->validate([
+//                'order_number' => 'required',
+//                'run_number' => 'required',
+//                'customer_id' => 'required',
+//                'COA' => 'required',
+//                'LIP' => 'required',
+//                'cartons_direction' => 'required',
+//                'bottles_direction' => 'required',
+//                'back' => '',
+//                'front' => '',
+//                'neck' => '',
+//                'bottle_print' => '',
+//                'carton_labels' => '',
+//                'turbidity' => '',
+//                'do2' => '',
+//                'alc_in_tank' => '',
+//                'alc_on_label' => '',
+//                'additives' => '',
+//                'delivered_by' => '',
+//                'required_by' => '',
+//                'pack_size' => 'required',
+//                'samples_required' => 'required',
+//                'cases_required' => 'required',
+//
+//                'cont_size' => '',
+//                'stretch_wrap' => '',
+//                'card_board' => '',
+//                'slip_sheet' => '',
+//                'run_length' => '',
+//
+//                'wine' => 'required',
+//                'bottle' => 'required',
+//                'cork' => 'required',
+//                'capsule' => 'required',
+//                'screw_cap' => 'required',
+//                'carton' => 'required',
+//                'divider' => 'required',
+//                'pallet' => 'required',
+//                'quantity_wine' => 'required_with:wine',
+//                'quantity_bottle' => 'required_with:bottle',
+//                'quantity_cork' => 'required_with:cork',
+//                'quantity_capsule' => 'required_with:capsule',
+//                'quantity_screw_cap' => 'required_with:screw_cap',
+//                'quantity_carton' => 'required_with:carton',
+//                'quantity_divider' => 'required_with:divider',
+//
+//                'baf_number' => '',
+//            ]);
+//
+//        try {
+//
+//
+//        } catch (\Exception $e) {
+//            echo $e;
+//        }
+//
+//
+//        return view('orders.show', [
+//            'order' => $order,
+//        ]);
 
     }
 
@@ -361,9 +424,9 @@ class OrderController extends Controller
     {
         //dd($request->id);
         try {
-            $tmp = Order::onlyTrashed()->where('id',$request->id)->restore();
+            $tmp = Order::onlyTrashed()->where('id', $request->id)->restore();
             return redirect('orders/')->with('status', 'Order restored');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect('orders/')->with('error', 'Order restore failed');
         }
 
@@ -378,7 +441,7 @@ class OrderController extends Controller
     {
         //dd($request);
         try {
-            Order::onlyTrashed()->where('id',$request->id)->forceDelete();
+            Order::onlyTrashed()->where('id', $request->id)->forceDelete();
             return \redirect('orders/')->with('status', 'Permanently Deleted');
         } catch (\Exception $e) {
             echo $e;
@@ -395,11 +458,11 @@ class OrderController extends Controller
     public function export(Request $request)
     {
 
-        $log='';
+        $log = '';
         //return Excel::download(new OrderExport(), 'order.xlsx');
 
         //get data
-        $orders = Order::withoutTrashed()->where('id',$request->id)->get();
+        $orders = Order::withoutTrashed()->where('id', $request->id)->get();
 
 
         //load spreadsheet
@@ -407,31 +470,28 @@ class OrderController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         $order = $orders->first();
-        $wine = $order->products->where('type','wine')->first();
-        $bottle = $order->products->where('type','bottle')->first();
-        $cork = $order->products->where('type','cork')->first();
-        $capsule = $order->products->where('type','capsule')->first();
-        $screw_cap = $order->products->where('type','screw cap')->first();
-        $carton = $order->products->where('type','carton')->first();
-        $divider = $order->products->where('type','divider')->first();
-        $pallet = $order->products->where('type','pallet')->first();
-
-
-
+        $wine = $order->products->where('type', 'wine')->first();
+        $bottle = $order->products->where('type', 'bottle')->first();
+        $cork = $order->products->where('type', 'cork')->first();
+        $capsule = $order->products->where('type', 'capsule')->first();
+        $screw_cap = $order->products->where('type', 'screw cap')->first();
+        $carton = $order->products->where('type', 'carton')->first();
+        $divider = $order->products->where('type', 'divider')->first();
+        $pallet = $order->products->where('type', 'pallet')->first();
 
 
         // manipulate cells
         $contacts = $order->customers->contacts;
         $specs = $order->pallets;
-        $str='C';
+        $str = 'C';
         $str1 = 'I';
 
         //dd($specs);
-        for ($i=0; $i<sizeof($contacts);$i++){
-            $cell_name = $str.'7';
-            $cell_email = $str.'9';
-            $cell_phone = $str1.'8';
-            $cell_fax = $str1.'9';
+        for ($i = 0; $i < sizeof($contacts); $i++) {
+            $cell_name = $str . '7';
+            $cell_email = $str . '9';
+            $cell_phone = $str1 . '8';
+            $cell_fax = $str1 . '9';
             //dd($contacts[$i]->name);
             $sheet->setCellValue($cell_name, $contacts[$i]->name);
             $sheet->setCellValue($cell_email, $contacts[$i]->email);
@@ -443,14 +503,14 @@ class OrderController extends Controller
             $str1++;
             //dd($str);
         }
-        $str='C';
-        for ($i=0; $i<sizeof($specs);$i++){
-            $cell_cartons_per_layer = $str.'49';
-            $cell_layers_per_pallet = $str.'50';
-            $cell_cartons_per_pallet = $str.'51';
+        $str = 'C';
+        for ($i = 0; $i < sizeof($specs); $i++) {
+            $cell_cartons_per_layer = $str . '49';
+            $cell_layers_per_pallet = $str . '50';
+            $cell_cartons_per_pallet = $str . '51';
             $sheet->setCellValue($cell_cartons_per_layer, $specs[$i]->cartons_per_layer);
             $sheet->setCellValue($cell_layers_per_pallet, $specs[$i]->layers_per_pallet);
-            $sheet->setCellValue($cell_cartons_per_pallet, $specs[$i]->cartons_per_layer*$specs[$i]->layers_per_pallet);
+            $sheet->setCellValue($cell_cartons_per_pallet, $specs[$i]->cartons_per_layer * $specs[$i]->layers_per_pallet);
             $str++;
         }
 
@@ -468,8 +528,8 @@ class OrderController extends Controller
         $sheet->setCellValue('F19', $order->alc_on_label);
         $sheet->setCellValue('F20', $order->alc_in_tank);
         $sheet->setCellValue('F21', $order->turbidity);
-        $sheet->setCellValue('I15', date_format(date_create($order->required_by),"d/m/Y"));
-        $sheet->setCellValue('I16', date_format(date_create($order->delivered_by),"d/m/Y"));
+        $sheet->setCellValue('I15', date_format(date_create($order->required_by), "d/m/Y"));
+        $sheet->setCellValue('I16', date_format(date_create($order->delivered_by), "d/m/Y"));
         $sheet->setCellValue('C40', $order->carton_labels);
         $sheet->setCellValue('C41', $order->bottle_print);
         $sheet->setCellValue('D42', $order->neck);
@@ -482,49 +542,48 @@ class OrderController extends Controller
         $sheet->setCellValue('C55', $order->cont_size);
         $sheet->setCellValue('J4', $order->baf_number);
 
-        if($order->bottles_direction === 'upright'){
+        if ($order->bottles_direction === 'upright') {
             $sheet->setCellValue('I48', 'X');
-        }elseif($order->bottles_direction === 'inverted'){
+        } elseif ($order->bottles_direction === 'inverted') {
             $sheet->setCellValue('I49', 'X');
-        }else{
+        } else {
             $sheet->setCellValue('I50', 'X');
         }
 
-        if($order->bottles_direction === 'upright'){
+        if ($order->bottles_direction === 'upright') {
             $sheet->setCellValue('I52', 'X');
-        }else{
+        } else {
             $sheet->setCellValue('I53', 'X');
         }
 
-        if($order->coa){
+        if ($order->coa) {
             $sheet->setCellValue('F17', 'YES');
-        }else{
+        } else {
             $sheet->setCellValue('F17', 'NO');
         }
-        if($order->lip){
+        if ($order->lip) {
             $sheet->setCellValue('F18', 'YES');
-        }else{
+        } else {
             $sheet->setCellValue('F18', 'NO');
         }
 
-        if($order->slip_sheet){
+        if ($order->slip_sheet) {
             $sheet->setCellValue('C52', 'YES');
-        }else{
+        } else {
             $sheet->setCellValue('C52', 'NO');
         }
 
-        if($order->card_board){
+        if ($order->card_board) {
             $sheet->setCellValue('C53', 'YES');
-        }else{
+        } else {
             $sheet->setCellValue('C53', 'NO');
         }
 
-        if($order->carton_labels){
+        if ($order->carton_labels) {
             $sheet->setCellValue('C40', 'YES');
-        }else{
+        } else {
             $sheet->setCellValue('C40', 'NO');
         }
-
 
 
         $sheet->setCellValue('C11', $wine->code);
@@ -556,20 +615,20 @@ class OrderController extends Controller
         //$sheet->setCellValue('I37', $bottle->pivot->quantity);
 
         // create a file name
-        $fileName = 'BAF_'.'BAXXX'.'_'.$order->run_number.'_'.$order->order_number.'_'.$order->wine_code.'.xlsx';
+        $fileName = 'BAF_' . 'BAXXX' . '_' . $order->run_number . '_' . $order->order_number . '_' . $order->wine_code . '.xlsx';
 
         // create a new spreadsheet
         $writer = new Xlsx($spreadsheet);
         try {
             $writer->save($fileName);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $log = $e->getMessage();
-    }
+        }
 
 
-        if($log==null){
+        if ($log == null) {
             return redirect('orders/')->with('status', 'Excel created');
-        }else{
+        } else {
             return redirect('orders/')->with('error', $log);
         }
 

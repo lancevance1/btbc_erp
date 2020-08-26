@@ -10,7 +10,7 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Order')
             ->withTimestamps()
-            ->withPivot('quantity');
+            ->withPivot('quantity','quantity_external');
     }
     protected $fillable = [
         'code','price','description','type','size','cost','current_inventory','order_quantity',

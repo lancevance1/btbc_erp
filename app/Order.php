@@ -13,7 +13,7 @@ class Order extends Model
     {
         return $this->belongsToMany('App\Product')
             ->withTimestamps()
-            ->withPivot('quantity');
+            ->withPivot('quantity','quantity_external');
     }
 
     public function customers()

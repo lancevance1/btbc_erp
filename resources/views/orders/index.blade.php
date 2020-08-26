@@ -4,7 +4,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         Welcome {{$user->name ?? ''}} <br/>
@@ -26,45 +26,82 @@
 
 
 
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>BAF</th>
+                                        <th>Order Number</th>
+                                        <th>Wine Code</th>
+                                        <th>Run Number</th>
+                                        <th>Created at</th>
+                                        <th>Updated at</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($orders ?? '' as $order)
+                                        <tr>
+                                            <td>{{$order->baf_number}}</td>
+                                            <td><a href="/orders/{{$order->id}}">{{$order->order_number}}</a></td>
+                                            <td>{{$order->products->where("type","wine")->first()->code??null}}</td>
+                                            <td>{{$order->run_number}}</td>
+
+                                            <td>{{$order->created_at}}</td>
+                                            <td>{{$order->updated_at}}</td>
+
+<td>
+                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"
+                                                type="button" class="btn btn-secondary">Create Pallets Specs
+                                        </button>
+                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets'"
+                                                type="button" class="btn btn-secondary">Show Pallets Specs
+                                        </button>
+                                        <form action="/orders/{{$order->id}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-secondary">Delete {{$order->id}}</button>
+                                        </form>
+
+                                        <button onclick="location.href='/orders/{{ $order->id}}/edit'"
+                                                type="button" class="btn btn-secondary">Edit
+                                        </button>
+
+                                        <a href="{{action('OrderController@export',['id'=>$order->id])}}">Export</a>
+</td>
+{{--                                        <a href="/orders/{{$order->id}}">--}}
 
 
-                        @foreach ($orders ?? '' as $order)
-                                <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"
-                                        type="button" class="btn btn-secondary">Create Pallets Specs
-                                </button>
-                                <button onclick="location.href='/orders/{{ $order->id}}/pallets'"
-                                        type="button" class="btn btn-secondary">Show Pallets Specs
-                                </button>
-                            <form action="/orders/{{$order->id}}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-secondary">Delete {{$order->id}}</button>
-                            </form>
 
-                            <button onclick="location.href='/orders/{{ $order->id}}/edit'"
-                                    type="button" class="btn btn-secondary">Edit
-                            </button>
+{{--                                            <p>Order Number: {{ $order->order_number }}--}}
+{{--                                                Wine Code: {{ $order->wine_code }}--}}
+{{--                                                Run Number: {{ $order->run_number }}--}}
+{{--                                                Created at: {{ $order->created_at }}--}}
+{{--                                                Updated at: {{ $order->updated_at }}--}}
+{{--                                                --}}{{--{{dd($order->customers->name)}}--}}
+{{--                                                Customer Name: {{$order->customers->name ?? null}}--}}
 
-                                <a href="{{action('OrderController@export',['id'=>$order->id])}}">Export</a>
-
-                            <a href="/orders/{{$order->id}}">
-                                <p>Order Number: {{ $order->order_number }}
-                                    Wine Code: {{ $order->wine_code }}
-                                    Run Number: {{ $order->run_number }}
-                                    Created at: {{ $order->created_at }}
-                                    Updated at: {{ $order->updated_at }}
-{{--{{dd($order->customers->name)}}--}}
-                                    Customer Name: {{$order->customers->name ?? null}}
-
-                                    @foreach($order->products as $product)
-                                        {{ $product->type }}: {{ $product->code }}
-                                        Quantity: {{$product->pivot->quantity}}
+{{--                                                @foreach($order->products as $product)--}}
+{{--                                                    {{ $product->type }}: {{ $product->code }}--}}
+{{--                                                    Quantity: {{$product->pivot->quantity}}--}}
+{{--                                                @endforeach--}}
+{{--                                            </p>--}}
+{{--                                            <br/>--}}
+{{--                                        </a>--}}
+                                        </tr>
                                     @endforeach
-                                </p>
-                                <br/>
-                            </a>
 
-                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+
+
+
+
+
+
 
                             @foreach ($orders_soft_deleted ?? '' as $tmp)
                                 {{$tmp}}
