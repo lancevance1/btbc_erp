@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
@@ -105,7 +106,30 @@
             @yield('content')
         </main>
     </div>
+{{--    <footer id="footer" class="site-footer js-footer" role="contentinfo">--}}
+{{--        <div class="site-footer--container">--}}
 
 
+{{--            <div class="site-footer--copyright fs-fine">--}}
+{{--                --}}
+
+{{--                <p class="mt-auto mb24">--}}
+{{--                    site design / logo &#169; 2020 Stack Exchange Inc; user contributions licensed under <a href="https://stackoverflow.com/help/licensing">cc by-sa</a>.                    <span id="svnrev">rev&nbsp;2020.8.25.37479</span>--}}
+{{--                </p>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
+{{--    </footer>--}}
+    <footer class="fixed-bottom bg-white">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-12">© 2020 - Barossa Trading and Bottling Company</div>
+            </div>
+
+        </div>
+    </footer>
 </body>
+
+
+
 </html>
