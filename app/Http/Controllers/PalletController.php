@@ -47,7 +47,9 @@ class PalletController extends Controller
     }
 
         //dd($customer->contacts);
-        return redirect('orders/')->with('status','New pallet specs created');
+        $str = 'orders'.'r';
+        return redirect('orders/'.$order->id)->with('status','New pallet specs created');
+
     }
 
     public function show(Order $order,Pallet $pallet)
@@ -78,7 +80,8 @@ class PalletController extends Controller
 
 
         //return view('contacts.show',compact('contact'));
-        return redirect('orders/')->with('status','Pallets specs modified');
+
+        return redirect('orders/'.$order->id)->with('status','Pallets specs modified');
 
     }
 
@@ -87,7 +90,7 @@ class PalletController extends Controller
         try {
 
             $pallet->delete();
-            return \redirect('orders')->with('status','Successfully Deleted');
+            return \redirect('orders/'.$order->id)->with('status','Successfully Deleted');
         } catch (\Exception $e) {
             echo $e;
         }

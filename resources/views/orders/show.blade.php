@@ -3,14 +3,7 @@
 
 @section('content')
     <div class="container">
-        <form action="/orders/{{ $order->id}}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-secondary">Delete</button>
-        </form>
-        <a href="/orders/{{$order->id}}/edit">
-            Edit
-        </a>
+
 
 
         <div class="row">
@@ -32,6 +25,24 @@
                         <a href="#Pallet-Information"> Pallet Information</a>
                     </li>
                 </ul>
+                <div class="row">
+                    <div class="col-md-2">
+                        <form action="/orders/{{ $order->id}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-secondary">Delete</button>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+
+                        <button onclick="location.href='/orders/{{ $order->id}}/edit'"
+                                type="button" class="btn btn-secondary">Edit
+                        </button>
+                    </div>
+
+                </div>
+
+
 
                 <div class="customer">
                     <div class="row">
@@ -856,6 +867,72 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                             @enderror
+
+
+                            <div class="row">
+
+                                <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"
+                                        type="button" class="btn btn-secondary">Create
+                                </button>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="card card-body">
+
+
+
+                                    <table class="table">
+
+                                        <thead>
+                                        <tr>
+
+                                            <th>Cartons per Layer
+                                            </th>
+                                            <th>Layers per Pallet</th>
+
+
+                                        </tr>
+
+                                        </thead>
+
+
+                                        <tbody>
+
+
+                                        @foreach($order->pallets as $tmp)
+
+                                            <tr>
+
+                                                <td>{{$tmp->cartons_per_layer}}</td>
+                                                <td>{{$tmp->layers_per_pallet}}</td>
+
+
+                                                <td>
+
+                                                    <button
+                                                        onclick="location.href='/orders/{{ $order->id}}/pallets/{{$tmp->id}}/edit'"
+                                                        type="button" class="btn btn-secondary">Edit
+                                                    </button>
+
+                                                    <form
+                                                        action="/orders/{{$order->id}}/pallets/{{$tmp->id}}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-secondary">Delete
+                                                        </button>
+                                                    </form>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">

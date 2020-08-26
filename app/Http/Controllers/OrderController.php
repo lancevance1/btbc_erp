@@ -85,7 +85,7 @@ class OrderController extends Controller
     {
         $total_orders = Order::whereNull('deleted_at')->count();
 
-        $orders = Order::whereNull('deleted_at')->orderBy('created_at', 'DESC')->get();
+        $orders = Order::whereNull('deleted_at')->orderBy('updated_at', 'DESC')->get();
         $orders_soft_deleted = Order::onlyTrashed()->get();
         return view('orders.index', compact('orders', 'total_orders', 'orders_soft_deleted'));
     }
@@ -458,6 +458,7 @@ class OrderController extends Controller
     public function export(Request $request)
     {
 
+        try {
         $log = '';
         //return Excel::download(new OrderExport(), 'order.xlsx');
 
@@ -481,7 +482,11 @@ class OrderController extends Controller
 
 
         // manipulate cells
-        $contacts = $order->customers->contacts;
+            $contacts =[];
+            if(isset($order->customers)){  $contacts = $order->customers->contacts;
+                $sheet->setCellValue('C6', $order->customers->name);
+                $sheet->setCellValue('C8', $order->customers->address);}
+
         $specs = $order->pallets;
         $str = 'C';
         $str1 = 'I';
@@ -503,6 +508,7 @@ class OrderController extends Controller
             $str1++;
             //dd($str);
         }
+
         $str = 'C';
         for ($i = 0; $i < sizeof($specs); $i++) {
             $cell_cartons_per_layer = $str . '49';
@@ -514,8 +520,7 @@ class OrderController extends Controller
             $str++;
         }
 
-        $sheet->setCellValue('C6', $order->customers->name);
-        $sheet->setCellValue('C8', $order->customers->address);
+
 
         $sheet->setCellValue('H5', $order->run_number);
         $sheet->setCellValue('I11', $order->order_number);
@@ -585,33 +590,63 @@ class OrderController extends Controller
             $sheet->setCellValue('C40', 'NO');
         }
 
+        if (isset($wine)) {
+            $sheet->setCellValue('C11', $wine->code);
+            $sheet->setCellValue('C20', $wine->code);
+            $sheet->setCellValue('C21', $wine->description);
+        }
 
-        $sheet->setCellValue('C11', $wine->code);
-        $sheet->setCellValue('C20', $wine->code);
-        $sheet->setCellValue('C30', $bottle->code);
-        $sheet->setCellValue('C31', $cork->code);
-        $sheet->setCellValue('C32', $capsule->code);
-        $sheet->setCellValue('C33', $screw_cap->code);
-        $sheet->setCellValue('C35', $carton->code);
-        $sheet->setCellValue('C36', $divider->code);
-        $sheet->setCellValue('C48', $pallet->code);
+        if (isset($bottle)) {
+            $sheet->setCellValue('C30', $bottle->code);
+            $sheet->setCellValue('D30', $bottle->description);
+            $sheet->setCellValue('H30', $bottle->pivot->quantity);
+            $sheet->setCellValue('I30', $bottle->pivot->quantity_external);
+        }
+        if (isset($cork)) {
+            $sheet->setCellValue('C31', $cork->code);
+            $sheet->setCellValue('D31', $cork->description);
+            $sheet->setCellValue('H31', $cork->pivot->quantity);
+            $sheet->setCellValue('I31', $cork->pivot->quantity_external);
+        }
 
-        $sheet->setCellValue('C21', $wine->description);
-        $sheet->setCellValue('D30', $bottle->description);
-        $sheet->setCellValue('D31', $cork->description);
-        $sheet->setCellValue('D32', $capsule->description);
-        $sheet->setCellValue('D33', $screw_cap->description);
-        $sheet->setCellValue('D35', $carton->description);
-        $sheet->setCellValue('D36', $divider->description);
+        if (isset($capsule)) {
+            $sheet->setCellValue('C32', $capsule->code);
+            $sheet->setCellValue('D32', $capsule->description);
+            $sheet->setCellValue('H32', $capsule->pivot->quantity);
+            $sheet->setCellValue('I32', $capsule->pivot->quantity_external);
+        }
+
+        if (isset($screw_cap)) {
+            $sheet->setCellValue('C33', $screw_cap->code);
+            $sheet->setCellValue('D33', $screw_cap->description);
+            $sheet->setCellValue('H33', $screw_cap->pivot->quantity);
+            $sheet->setCellValue('I33', $screw_cap->pivot->quantity_external);
+        }
+
+        if (isset($carton)) {
+            $sheet->setCellValue('C35', $carton->code);
+            $sheet->setCellValue('D35', $carton->description);
+            $sheet->setCellValue('H35', $carton->pivot->quantity);
+            $sheet->setCellValue('I35', $carton->pivot->quantity_external);
+        }
+
+        if (isset($divider)) {
+            $sheet->setCellValue('C36', $divider->code);
+            $sheet->setCellValue('D36', $divider->description);
+            $sheet->setCellValue('H36', $divider->pivot->quantity);
+            $sheet->setCellValue('I36', $divider->pivot->quantity_external);
+        }
+
+        if (isset($pallet)) {
+            $sheet->setCellValue('C48', $pallet->code);
+        }
+
+
         //$sheet->setCellValue('', $pallet->descrition);
 
         //dd($bottle->pivot->quantity);
-        $sheet->setCellValue('H30', $bottle->pivot->quantity);
-        $sheet->setCellValue('H31', $cork->pivot->quantity);
-        $sheet->setCellValue('H32', $capsule->pivot->quantity);
-        $sheet->setCellValue('H33', $screw_cap->pivot->quantity);
-        $sheet->setCellValue('H35', $carton->pivot->quantity);
-        $sheet->setCellValue('H36', $divider->pivot->quantity);
+
+
         //$sheet->setCellValue('I37', $bottle->pivot->quantity);
 
         // create a file name
@@ -619,7 +654,7 @@ class OrderController extends Controller
 
         // create a new spreadsheet
         $writer = new Xlsx($spreadsheet);
-        try {
+
             $writer->save($fileName);
         } catch (\Exception $e) {
             $log = $e->getMessage();

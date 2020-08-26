@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">
                         Welcome {{$user->name ?? ''}} <br/>
-                        Orders<a href="/orders/create">new order</a>
+                        <a href="/orders/create">new order</a>
                         Total Orders: {{$total_orders ?? ''}}
                     </div>
 
@@ -41,7 +41,7 @@
                                     <tbody>
                                     @foreach ($orders ?? '' as $order)
                                         <tr>
-                                            <td>{{$order->baf_number}}</td>
+                                            <td><a href="/orders/{{$order->id}}">{{$order->baf_number}}</a></td>
                                             <td><a href="/orders/{{$order->id}}">{{$order->order_number}}</a></td>
                                             <td>{{$order->products->where("type","wine")->first()->code??null}}</td>
                                             <td>{{$order->run_number}}</td>
@@ -50,23 +50,35 @@
                                             <td>{{$order->updated_at}}</td>
 
 <td>
-                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"
-                                                type="button" class="btn btn-secondary">Create Pallets Specs
-                                        </button>
-                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets'"
-                                                type="button" class="btn btn-secondary">Show Pallets Specs
-                                        </button>
-                                        <form action="/orders/{{$order->id}}" method="POST">
+{{--                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"--}}
+{{--                                                type="button" class="btn btn-secondary">Create Pallets Specs--}}
+{{--                                        </button>--}}
+{{--                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets'"--}}
+{{--                                                type="button" class="btn btn-secondary">Show Pallets Specs--}}
+{{--                                        </button>--}}
+
+    <button onclick="location.href='/orders/{{ $order->id}}/edit'"
+            type="button" class="btn btn-secondary">Edit
+    </button>
+    <form action="/orders/export/{{$order->id}}" method="GET">
+        @csrf
+
+        <button type="submit" class="btn btn-secondary">Export </button>
+    </form>
+
+    <form action="/orders/{{$order->id}}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-secondary">Delete {{$order->id}}</button>
+                                            <button type="submit" class="btn btn-secondary">Delete </button>
                                         </form>
 
-                                        <button onclick="location.href='/orders/{{ $order->id}}/edit'"
-                                                type="button" class="btn btn-secondary">Edit
-                                        </button>
 
-                                        <a href="{{action('OrderController@export',['id'=>$order->id])}}">Export</a>
+
+
+
+
+
+
 </td>
 {{--                                        <a href="/orders/{{$order->id}}">--}}
 
