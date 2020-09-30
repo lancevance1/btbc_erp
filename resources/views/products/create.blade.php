@@ -139,19 +139,19 @@
                                     </span>
                         @enderror
 
-                        <label for="current_inventory_value" class="col-md-4 col-form-label ">Current Inventory
-                            Value</label>
+{{--                        <label for="current_inventory_value" class="col-md-4 col-form-label ">Current Inventory--}}
+{{--                            Value</label>--}}
 
-                        <input id="current_inventory_value" type="number"
-                               class="form-control @error('current_inventory_value') is-invalid @enderror"
-                               name="current_inventory_value" value="{{ old('current_inventory_value') }}"
-                               autocomplete="current_inventory_value" autofocus>
+{{--                        <input id="current_inventory_value" type="number"--}}
+{{--                               class="form-control @error('current_inventory_value') is-invalid @enderror"--}}
+{{--                               name="current_inventory_value" value="{{ old('current_inventory_value') }}"--}}
+{{--                               autocomplete="current_inventory_value" autofocus>--}}
 
-                        @error('current_inventory_value')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
+{{--                        @error('current_inventory_value')--}}
+{{--                        <span class="invalid-feedback" role="alert">--}}
+{{--                                        <strong>{{ $message }}</strong>--}}
+{{--                                    </span>--}}
+{{--                        @enderror--}}
 
 
                         <label for="belong_to" class="col-md-4 col-form-label ">Belong to</label>

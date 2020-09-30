@@ -5,11 +5,30 @@
     <div class="container">
 
 
-
         <div class="row">
             <div class="col-8 offset-2">
                 <div class="row">
                     <h1>Bottling Approval Form (BAF)</h1>
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    <div class="col-md-1">
+
+                        <button onclick="location.href='/orders/{{ $order->id}}/edit'"
+                                type="button" class="btn btn-secondary">Edit
+                        </button>
+                    </div>
+                    <div class="col-md-1">
+                        <form action="/orders/{{ $order->id}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-secondary">Delete</button>
+                        </form>
+                    </div>
+
+
                 </div>
                 <ul>
                     <li>
@@ -25,23 +44,6 @@
                         <a href="#Pallet-Information"> Pallet Information</a>
                     </li>
                 </ul>
-                <div class="row">
-                    <div class="col-md-2">
-                        <form action="/orders/{{ $order->id}}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-secondary">Delete</button>
-                        </form>
-                    </div>
-                    <div class="col-md-2">
-
-                        <button onclick="location.href='/orders/{{ $order->id}}/edit'"
-                                type="button" class="btn btn-secondary">Edit
-                        </button>
-                    </div>
-
-                </div>
-
 
 
                 <div class="customer">
@@ -350,7 +352,7 @@
 
                                 @foreach($wines as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -368,7 +370,8 @@
                             <label for="quantity_wine">Supply: BTBC</label>
                             <input id="quantity_wine" type="number"
                                    class="form-control @error('quantity_wine') is-invalid @enderror"
-                                   name="quantity_wine" value="{{ old('quantity_wine') ??$wines->first()->pivot->quantity??null}}"
+                                   name="quantity_wine"
+                                   value="{{ old('quantity_wine') ??$wines->first()->pivot->quantity??null}}"
                                    autocomplete="quantity_wine" autofocus readonly
                             >
 
@@ -383,9 +386,10 @@
                             <label for="quantity_wine_external">Supply: Customer</label>
                             <input id="quantity_wine_external" type="number"
                                    class="form-control @error('quantity_wine_external') is-invalid @enderror"
-                                   name="quantity_wine_external" value="{{ old('quantity_wine_external') ??$wines->first()->pivot->quantity_external??null}}"
+                                   name="quantity_wine_external"
+                                   value="{{ old('quantity_wine_external') ??$wines->first()->pivot->quantity_external??null}}"
                                    autocomplete="quantity_wine_external" autofocus
-                                  readonly>
+                                   readonly>
 
                             @error('quantity_wine_external')
                             <span class="invalid-feedback" role="alert">
@@ -400,11 +404,12 @@
 
                             <label for="bottle" class=" col-form-label ">Bottle</label>
                             <select id="bottle"
-                                    class="form-control @error('bottle') is-invalid @enderror" name="bottle" disabled="true">
+                                    class="form-control @error('bottle') is-invalid @enderror" name="bottle"
+                                    disabled="true">
 
                                 @foreach($bottles as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -422,7 +427,8 @@
                             <label for="quantity_bottle" class=" col-form-label ">Supply: BTBC</label>
                             <input id="quantity_bottle" type="number"
                                    class="form-control @error('quantity_bottle') is-invalid @enderror"
-                                   name="quantity_bottle" value="{{ old('quantity_bottle') ??$bottles->first()->pivot->quantity??null}}"
+                                   name="quantity_bottle"
+                                   value="{{ old('quantity_bottle') ??$bottles->first()->pivot->quantity??null}}"
                                    autocomplete="quantity_bottle" autofocus readonly>
 
                             @error('quantity_bottle')
@@ -436,7 +442,8 @@
                             <label for="quantity_bottle_external" class=" col-form-label ">Supply: Customer</label>
                             <input id="quantity_bottle_external" type="number"
                                    class="form-control @error('quantity_bottle_external') is-invalid @enderror"
-                                   name="quantity_bottle_external" value="{{ old('quantity_bottle_external') ??$bottles->first()->pivot->quantity_external??null}}"
+                                   name="quantity_bottle_external"
+                                   value="{{ old('quantity_bottle_external') ??$bottles->first()->pivot->quantity_external??null}}"
                                    autocomplete="quantity_bottle_external" autofocus readonly>
 
                             @error('quantity_bottle_external')
@@ -451,11 +458,12 @@
                         <div class="form-group col-md-6">
                             <label for="cork" class="col-form-label ">Cork</label>
                             <select id="cork"
-                                    class="form-control @error('cork') is-invalid @enderror" name="cork" disabled="true">
+                                    class="form-control @error('cork') is-invalid @enderror" name="cork"
+                                    disabled="true">
 
                                 @foreach($corks as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -472,7 +480,8 @@
                             <label for="quantity_cork" class="col-form-label ">Supply: BTBC</label><input
                                 id="quantity_cork" type="number"
                                 class="form-control @error('quantity_cork') is-invalid @enderror"
-                                name="quantity_cork" value="{{ old('quantity_cork')??$corks->first()->pivot->quantity??null }}"
+                                name="quantity_cork"
+                                value="{{ old('quantity_cork')??$corks->first()->pivot->quantity??null }}"
                                 autocomplete="quantity_cork" autofocus readonly>
 
                             @error('quantity_cork')
@@ -485,7 +494,8 @@
                             <label for="quantity_cork_external" class=" col-form-label ">Supply: Customer</label><input
                                 id="quantity_cork_external" type="number"
                                 class="form-control @error('quantity_cork_external') is-invalid @enderror"
-                                name="quantity_cork_external" value="{{ old('quantity_cork_external')??$corks->first()->pivot->quantity_external??null  }}"
+                                name="quantity_cork_external"
+                                value="{{ old('quantity_cork_external')??$corks->first()->pivot->quantity_external??null  }}"
                                 autocomplete="quantity_cork_external" autofocus readonly>
 
                             @error('quantity_cork_external')
@@ -500,11 +510,12 @@
 
                             <label for="capsule" class=" col-form-label ">Capsule</label>
                             <select id="capsule"
-                                    class="form-control @error('capsule') is-invalid @enderror" name="capsule" disabled="true">
+                                    class="form-control @error('capsule') is-invalid @enderror" name="capsule"
+                                    disabled="true">
 
                                 @foreach($capsules as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -522,7 +533,8 @@
                             <label for="quantity_capsule" class=" col-form-label ">Supply: BTBC</label>
                             <input id="quantity_capsule" type="number"
                                    class="form-control @error('quantity_capsule') is-invalid @enderror"
-                                   name="quantity_capsule" value="{{ old('quantity_capsule')??$capsules->first()->pivot->quantity??null  }}"
+                                   name="quantity_capsule"
+                                   value="{{ old('quantity_capsule')??$capsules->first()->pivot->quantity??null  }}"
                                    autocomplete="quantity_capsule" autofocus readonly>
 
                             @error('quantity_capsule')
@@ -537,7 +549,8 @@
                             <label for="quantity_capsule_external" class=" col-form-label ">Supply: Customer</label>
                             <input id="quantity_capsule_external" type="number"
                                    class="form-control @error('quantity_capsule_external') is-invalid @enderror"
-                                   name="quantity_capsule_external" value="{{ old('quantity_capsule_external') ??$capsules->first()->pivot->quantity_external??null }}"
+                                   name="quantity_capsule_external"
+                                   value="{{ old('quantity_capsule_external') ??$capsules->first()->pivot->quantity_external??null }}"
                                    autocomplete="quantity_capsule_external" autofocus readonly>
 
                             @error('quantity_capsule_external')
@@ -554,11 +567,12 @@
 
                             <label for="screw_cap" class="col-form-label ">Screw Cap</label>
                             <select id="screw_cap"
-                                    class="form-control @error('screw_cap') is-invalid @enderror" name="screw_cap" disabled="true">
+                                    class="form-control @error('screw_cap') is-invalid @enderror" name="screw_cap"
+                                    disabled="true">
 
                                 @foreach($screwCaps as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -589,7 +603,8 @@
 
                         <div class="form-group col-md-3">
 
-                            <label for="quantity_screw_cap_external" class=" col-form-label ">Supply: Customer</label><input
+                            <label for="quantity_screw_cap_external" class=" col-form-label ">Supply:
+                                Customer</label><input
                                 id="quantity_screw_cap_external" type="number"
                                 class="form-control @error('quantity_screw_cap_external') is-invalid @enderror"
                                 name="quantity_screw_cap_external"
@@ -608,11 +623,12 @@
                         <div class="form-group col-md-6">
                             <label for="carton" class=" col-form-label ">Carton</label>
                             <select id="carton"
-                                    class="form-control @error('carton') is-invalid @enderror" name="carton" disabled="true">
+                                    class="form-control @error('carton') is-invalid @enderror" name="carton"
+                                    disabled="true">
 
                                 @foreach($cartons as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -629,7 +645,8 @@
                             <label for="quantity_carton" class=" col-form-label ">Supply: BTBC</label><input
                                 id="quantity_carton" type="number"
                                 class="form-control @error('quantity_carton') is-invalid @enderror"
-                                name="quantity_carton" value="{{ old('quantity_carton')??$cartons->first()->pivot->quantity??null  }}"
+                                name="quantity_carton"
+                                value="{{ old('quantity_carton')??$cartons->first()->pivot->quantity??null  }}"
                                 autocomplete="quantity_carton" autofocus readonly>
 
                             @error('quantity_carton')
@@ -639,10 +656,12 @@
                             @enderror
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="quantity_carton_external" class=" col-form-label ">Supply: Customer</label><input
+                            <label for="quantity_carton_external" class=" col-form-label ">Supply:
+                                Customer</label><input
                                 id="quantity_carton_external" type="number"
                                 class="form-control @error('quantity_carton_external') is-invalid @enderror"
-                                name="quantity_carton_external" value="{{ old('quantity_carton_external') ??$cartons->first()->pivot->quantity_external??null }}"
+                                name="quantity_carton_external"
+                                value="{{ old('quantity_carton_external') ??$cartons->first()->pivot->quantity_external??null }}"
                                 autocomplete="quantity_carton_external" autofocus readonly>
 
                             @error('quantity_carton_external')
@@ -656,11 +675,12 @@
                         <div class="form-group col-md-6">
                             <label for="divider" class=" col-form-label ">Divider</label>
                             <select id="divider"
-                                    class="form-control @error('divider') is-invalid @enderror" name="divider" disabled="true">
+                                    class="form-control @error('divider') is-invalid @enderror" name="divider"
+                                    disabled="true">
 
                                 @foreach($dividers as $product)
                                     <option value='{{$product->id}}'
-                                            selected="selected" >
+                                            selected="selected">
 
                                         {{$product->code}}
                                     </option>
@@ -678,7 +698,8 @@
                             <label for="quantity_divider" class=" col-form-label ">Supply: BTBC</label><input
                                 id="quantity_divider" type="number"
                                 class="form-control @error('quantity_divider') is-invalid @enderror"
-                                name="quantity_divider" value="{{ old('quantity_divider') ??$dividers->first()->pivot->quantity??null }}"
+                                name="quantity_divider"
+                                value="{{ old('quantity_divider') ??$dividers->first()->pivot->quantity??null }}"
                                 autocomplete="quantity_divider" autofocus readonly>
 
                             @error('quantity_divider')
@@ -689,10 +710,12 @@
                         </div>
                         <div class="form-group col-md-3">
 
-                            <label for="quantity_divider_external" class=" col-form-label ">Supply: Customer</label><input
+                            <label for="quantity_divider_external" class=" col-form-label ">Supply:
+                                Customer</label><input
                                 id="quantity_divider_external" type="number"
                                 class="form-control @error('quantity_divider_external') is-invalid @enderror"
-                                name="quantity_divider_external" value="{{ old('quantity_divider_external')??$dividers->first()->pivot->quantity_external??null  }}"
+                                name="quantity_divider_external"
+                                value="{{ old('quantity_divider_external')??$dividers->first()->pivot->quantity_external??null  }}"
                                 autocomplete="quantity_divider_external" autofocus readonly>
 
                             @error('quantity_divider_external')
@@ -853,11 +876,12 @@
 
                             </label>
                             <select id="pallet"
-                                    class="form-control @error('pallet') is-invalid @enderror" name="pallet" disabled="true">
+                                    class="form-control @error('pallet') is-invalid @enderror" name="pallet"
+                                    disabled="true">
 
                                 @foreach($pallets as $product)
                                     <option value='{{$product->id}}'
-                                           selected="selected" >
+                                            selected="selected">
                                         {{$product->code}}
                                     </option>
                                 @endforeach
@@ -869,71 +893,53 @@
                             @enderror
 
 
-                            <div class="row">
+                            <div class="form-group row">
 
                                 <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"
                                         type="button" class="btn btn-secondary">Create
                                 </button>
                             </div>
 
-                            <div class="row">
 
-                                <div class="card card-body">
-
-
-
-                                    <table class="table">
-
-                                        <thead>
-                                        <tr>
-
-                                            <th>Cartons per Layer
-                                            </th>
-                                            <th>Layers per Pallet</th>
-
-
-                                        </tr>
-
-                                        </thead>
-
-
-                                        <tbody>
-
-
-                                        @foreach($order->pallets as $tmp)
-
-                                            <tr>
-
-                                                <td>{{$tmp->cartons_per_layer}}</td>
-                                                <td>{{$tmp->layers_per_pallet}}</td>
-
-
-                                                <td>
-
-                                                    <button
-                                                        onclick="location.href='/orders/{{ $order->id}}/pallets/{{$tmp->id}}/edit'"
-                                                        type="button" class="btn btn-secondary">Edit
-                                                    </button>
-
-                                                    <form
-                                                        action="/orders/{{$order->id}}/pallets/{{$tmp->id}}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-secondary">Delete
-                                                        </button>
-                                                    </form>
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
                         </div>
+
+                    </div>
+                    <div class="form-group row ">
+
+                            <div class="card card-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Cartons per Layer
+                                        </th>
+                                        <th>Layers per Pallet</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($order->pallets as $tmp)
+                                        <tr>
+                                            <td>{{$tmp->cartons_per_layer}}</td>
+                                            <td>{{$tmp->layers_per_pallet}}</td>
+                                            <td>
+                                                <button
+                                                    onclick="location.href='/orders/{{ $order->id}}/pallets/{{$tmp->id}}/edit'"
+                                                    type="button" class="btn btn-secondary">Edit
+                                                </button>
+                                                <form
+                                                    action="/orders/{{$order->id}}/pallets/{{$tmp->id}}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-secondary">Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
                     </div>
                     <div class="form-group row">
 

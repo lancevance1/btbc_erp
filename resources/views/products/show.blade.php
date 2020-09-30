@@ -10,6 +10,11 @@
                 <div class="row">
                     <h1>Dry Good</h1>
                 </div>
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
                 <div class="row">
 {{--                    <a href="/products/create">Create</a>--}}
 
@@ -179,7 +184,7 @@
 
                         <input id="current_inventory_value" type="number"
                                class="form-control @error('current_inventory_value') is-invalid @enderror"
-                               name="current_inventory_value" value="{{ old('current_inventory_value') ??$product->current_inventory_value}}"
+                               name="current_inventory_value" value="{{ old('current_inventory_value') ??$current_inventory_value}}"
                                autocomplete="current_inventory_value" autofocus readonly>
 
                         @error('current_inventory_value')

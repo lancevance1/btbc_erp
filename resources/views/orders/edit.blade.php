@@ -504,12 +504,13 @@
                         </div>
                         <div class="form-group row">
                             <div class="form-group col-md-6">
-
+{{--{{dd($capsules)}}--}}
                                 <label for="capsule" class=" col-form-label ">Capsule</label>
                                 <select id="capsule"
                                         class="form-control @error('capsule') is-invalid @enderror" name="capsule">
                                     <option value="">Please select...</option>
                                     @foreach($capsules as $product)
+                                        <option value='{{$product->id}}'
                                         @if (isset($current_capsule))
                                             @if ( $current_capsule->id == $product->id??old('capsule')== $product->id)
                                                 selected="selected" @endif @endif
@@ -568,6 +569,7 @@
                                         class="form-control @error('screw_cap') is-invalid @enderror" name="screw_cap">
                                     <option value="">Please select...</option>
                                     @foreach($screwCaps as $product)
+                                        <option value='{{$product->id}}'
                                         @if (isset($current_screw_cap))
                                             @if ( $current_screw_cap->id == $product->id??old('screw_cap')== $product->id)
                                                 selected="selected" @endif @endif
@@ -625,6 +627,7 @@
                                         class="form-control @error('carton') is-invalid @enderror" name="carton">
                                     <option value="">Please select...</option>
                                     @foreach($cartons as $product)
+                                        <option value='{{$product->id}}'
                                         @if (isset($current_carton))
                                             @if ( $current_carton->id == $product->id??old('carton')== $product->id)
                                                 selected="selected" @endif @endif

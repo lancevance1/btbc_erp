@@ -39,8 +39,8 @@
                                 <th>To be ordered</th>
                                 <th>Current Inventory Value</th>
                                 <th>Belong to</th>
-                                <th>Created at</th>
-                                <th>Updated at</th>
+                                <th></th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -51,14 +51,7 @@
 
 
                                     <td>{{$product->type}}
-                                        <button onclick="location.href='/products/{{ $product->id}}/edit'"
-                                                type="button" class="btn btn-secondary">Edit
-                                        </button>
-                                        <form action="/products/{{$product->id}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-secondary">Delete</button>
-                                        </form>
+
                                     </td>
                                     <td><a href="/products/{{$product->id}}">{{$product->code}}</a>
 
@@ -69,21 +62,35 @@
                                     <td>{{$product->current_inventory}}</td>
                                     <td>{{$product->order_quantity}}</td>
                                     <td>{{$product->to_be_ordered}}</td>
-                                    <td>{{$product->current_inventory_value}}</td>
+                                    <td>{{$product->cost*$product->current_inventory}}</td>
                                     <td>{{$product->belong_to}}</td>
-                                    <td>{{$product->created_at}}</td>
-                                    <td>{{$product->updated_at}}</td>
+                                    <td> <button onclick="location.href='/products/{{ $product->id}}/edit'"
+                                                 type="button" class="btn btn-secondary">Edit
+                                        </button>
+                                        <form action="/products/{{$product->id}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-secondary">Delete</button>
+                                        </form></td>
+
 
                                 </tr>
 
                             @endforeach
                             </tbody>
                         </table>
+
+
                         </div>
 
 
                     </div>
 
+                </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        {{ $products->links() }}
+                    </div>
                 </div>
             </div>
         </div>

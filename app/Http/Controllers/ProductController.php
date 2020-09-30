@@ -19,7 +19,7 @@ class ProductController extends Controller
 //            ->take(10)
 //            ->orderBy('id','DESC')
 //            ->get();
-        $products = Product::all();
+        $products = Product::paginate(15);
         return view('products.index',compact('products'));
     }
 
@@ -53,8 +53,10 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $current_inventory_value = $product->cost * $product->current_inventory;
         return view('products.show',[
             'product' => $product,
+            'current_inventory_value'=>$current_inventory_value,
         ]);
     }
 
@@ -86,8 +88,8 @@ class ProductController extends Controller
         }
 
 
-        return view('products.show',compact('product'));
-
+//        return view('products.show',compact('product'));
+return redirect('products/'.$product->id)->with('status','dry good updated');
     }
 
     public function destroy(Product $product)

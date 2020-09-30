@@ -131,6 +131,11 @@
                     </div>
 
                 </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        {{ $orders->links() }}
+                    </div>
+                </div>
             </div>
         </div>
         {{--    {{$name ?? ''}}--}}

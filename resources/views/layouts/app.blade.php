@@ -22,7 +22,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="fixed-top navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/dashboard') }}" >
                     <div><img src="{{ URL::to('/') }}/svg/wine.svg" alt="wine icon" width="25" height="25" >
@@ -56,8 +56,9 @@
                     </ul>
 
                     {{-- search functionality start         --}}
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <form class="form-inline my-2 my-lg-0" action="/search" method="get" enctype="multipart/form-data">
+
+                        <input name="q" value="{{ old('searchTerm') }}" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 {{-- search functionality end           --}}

@@ -43,4 +43,33 @@ class HomeController extends Controller
 
 
     }
+
+
+    public function testsearch(Request $request)
+    {
+
+
+        //dd($request->all());
+        $searchTerm = $request->input('q');
+        //dd($searchTerm);
+
+
+        if($searchTerm != ""){
+            $orders = Order::where ( 'order_number', 'LIKE', '%' . $searchTerm . '%' )
+                ->orWhere('baf_number', 'like', '%' .$searchTerm. '%')
+                ->orWhere('run_number', 'like', '%' .$searchTerm. '%')->get();
+            $products = Product::where ( 'code', 'LIKE', '%' . $searchTerm . '%' )
+                ->orWhere('type', 'like', '%' .$searchTerm. '%')
+                ->get();
+            $count = count ( $orders )+count ( $products );
+            if (count ( $orders ) > 0 || count ( $products ) > 0)
+                return view('search', compact('orders','products','count'));
+
+            else
+
+                return back()->with ( 'status','No Details found. Try to search again !' );
+        }
+
+        return back()->with ( 'status','No Details found. Try to search again !' );
+    }
 }

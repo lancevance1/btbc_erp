@@ -11,6 +11,11 @@
                     <div class="row">
                         <h1>Add New Pallets Specs</h1>
                     </div>
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     <div class="form-group row">
 
 

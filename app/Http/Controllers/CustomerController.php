@@ -21,7 +21,7 @@ class CustomerController extends Controller
 //            ->get();
         $customers = Customer::take(10)
             ->orderBy('created_at', 'DESC')
-            ->get();
+            ->paginate(15);
         //dd($customers->first()->contacts);
         return view('customers.index',compact('customers'));
     }

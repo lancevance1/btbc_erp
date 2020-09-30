@@ -25,6 +25,7 @@ Route::get('/dashboard', 'DashboardController@show')->name('dashboard.show');
 Route::patch('/orders/reverse/{id}', 'OrderController@reverse');
 Route::delete('/orders/forceDelete/{id}', 'OrderController@forceDestroy');
 Route::get('/orders/export/{id}', 'OrderController@export');
+Route::get('/search', 'HomeController@testsearch');
 Route::resources([
     'orders' => 'OrderController',
     'products' => 'ProductController',

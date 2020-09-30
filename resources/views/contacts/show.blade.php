@@ -9,6 +9,11 @@
             <div class="row">
                 <h1>Edit Contact</h1>
             </div>
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
             <div class="row">
                 <div class="col-sm-3">
                     <form action="/customers/{{$customer->id}}/contacts/create">

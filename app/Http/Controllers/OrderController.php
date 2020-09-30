@@ -81,11 +81,14 @@ class OrderController extends Controller
     }
 
 
+
+
     public function index()
     {
+
         $total_orders = Order::whereNull('deleted_at')->count();
 
-        $orders = Order::whereNull('deleted_at')->orderBy('updated_at', 'DESC')->get();
+        $orders = Order::whereNull('deleted_at')->orderBy('updated_at', 'DESC')->paginate(15);
         $orders_soft_deleted = Order::onlyTrashed()->get();
         return view('orders.index', compact('orders', 'total_orders', 'orders_soft_deleted'));
     }
@@ -331,7 +334,7 @@ class OrderController extends Controller
 //                $response['response'] = "successfully updated";
 
 
-        return redirect('orders/')->with('status', 'New order created');
+        return redirect('orders/')->with('status', 'order updated');
 
 //            $data = $request->validate([
 //                'order_number' => 'required',
