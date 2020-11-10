@@ -37,15 +37,11 @@ class CustomerController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'address' => '',
-
-
         ]);
 
         $customer = Customer::create($data);
         //dd($customer);
-
         //$customer->contacts()->save($tmp);
-
         return redirect('customers/')->with('status','New customer created');
     }
 
@@ -68,22 +64,24 @@ class CustomerController extends Controller
             'address' => '',
         ]);
         try {
-
             $customer->update($data);
         }catch (\Exception $e) {
             echo $e;
             //report($e);;
         }
-
-
         //return view('customers.show');
-return redirect('customers/')->with('status','Customer modified');
+        return redirect('customers/')->with('status','Customer modified');
     }
 
     public function destroy(Customer $customer)
     {
         try {
             $customer->contacts()->delete();
+            foreach ($customer->orders as $tmp){
+                $tmp->customer_id = null;
+
+                $tmp->save();
+            }
             $customer->delete();
             return \redirect('customers')->with('status','Successfully Deleted');
         } catch (\Exception $e) {

@@ -624,7 +624,7 @@
                                     </span>
                             @enderror
                         </div>
-                    </div>
+                    </div>la
                     <div class="form-group row">
                         <div class="form-group col-md-6">
                             <label for="divider" class=" col-form-label ">Divider</label>

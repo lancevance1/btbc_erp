@@ -22,6 +22,12 @@ class Order extends Model
 
     }
 
+    public function purchases()
+    {
+        return $this->belongsTo('App\Purchase', 'purchase_id');
+
+    }
+
     public function pallets()
     {
         return $this->hasMany('App\Pallet');

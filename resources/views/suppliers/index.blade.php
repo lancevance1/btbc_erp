@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Dry Goods')
+@section('title', 'Suppliers')
 
 
 @section('content')
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="/products/create">Create a dry good</a>
+                        <a href="/suppliers/create">Create new supplier</a>
                     </div>
                     <div class="card-body">
                         @if (session('status'))
@@ -22,39 +22,26 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>Type</th>
-                                <th>Code</th>
-                                <th>Description</th>
-                                <th>Price</th>
-                                <th>Cost</th>
-                                <th>Current Inventory</th>
-                                <th>Order Quantity</th>
-                                <th>To be ordered</th>
-                                <th>Current Inventory Value</th>
-                                <th>Belong to</th>
+                                <th>Id</th>
+                                <th>Name</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($products ?? '' as $product)
+                            @foreach ($suppliers ?? '' as $sup)
                                 <tr>
-                                    <td>{{$product->type}}
+                                    <td>{{$sup->id}}
                                     </td>
-                                    <td><a href="/products/{{$product->id}}">{{$product->code}}</a>
+                                    <td>{{$sup->name}}
                                     </td>
-                                    <td>{{$product->description}}</td>
-                                    <td>{{$product->price}}</td>
-                                    <td>{{$product->cost}}</td>
-                                    <td>{{$product->current_inventory}}</td>
-                                    <td>{{$product->order_quantity}}</td>
-                                    <td>{{$product->to_be_ordered}}</td>
-                                    <td>{{$product->cost*$product->current_inventory}}</td>
-                                    <td>{{$product->belong_to}}</td>
-                                    <td>{{$product->suppliers}}</td>
-                                    <td> <button onclick="location.href='/products/{{ $product->id}}/edit'"
+
+                                    <td><button onclick="location.href='/suppliers/{{ $sup->id}}/edit'"
+                                                type="button" class="btn btn-secondary">Add Price
+                                        </button>
+                                        <button onclick="location.href='/suppliers/{{ $sup->id}}/edit'"
                                                  type="button" class="btn btn-secondary">Edit
                                         </button>
-                                        <form action="/products/{{$product->id}}" method="POST">
+                                        <form action="/suppliers/{{$sup->id}}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-secondary">Delete</button>
@@ -68,7 +55,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        {{ $products->links() }}
+                        {{ $suppliers->links() }}
                     </div>
                 </div>
             </div>

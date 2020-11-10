@@ -20,6 +20,7 @@ class ProductController extends Controller
 //            ->orderBy('id','DESC')
 //            ->get();
         $products = Product::paginate(15);
+
         return view('products.index',compact('products'));
     }
 
@@ -31,6 +32,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+
         $data = $request->validate([
             'code' => 'required',
             'cost' => 'required',
@@ -67,6 +69,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+
         try {
             $data = $request->validate([
                 'code' => 'required',
