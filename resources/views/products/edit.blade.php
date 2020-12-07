@@ -89,17 +89,7 @@
                                     </span>
                         @enderror
 
-                        <label for="cost" class="col-md-4 col-form-label ">Cost</label>
-                        <input id="cost" type="number" placeholder="Insert Cost..." step="0.01"
-                               class="form-control @error('cost') is-invalid @enderror"
-                               name="cost" value="{{ old('cost')??$product->cost }}"
-                               autocomplete="cost" autofocus>
 
-                        @error('cost')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
 
                         <label for="current_inventory" class="col-md-4 col-form-label ">Current Inventory</label>
                         <input id="current_inventory" type="number"
@@ -160,6 +150,46 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                         @enderror
+
+
+
+
+                            <label for="supplier" class="col-form-label ">Supplier</label>
+                            <select id="supplier"
+                                    class="form-control @error('supplier') is-invalid @enderror" name="supplier"
+                                    >
+
+                                @foreach($suppliers as $sup)
+                                    <option value='{{$sup->id}}'
+                                            selected="selected">
+
+                                        {{$sup->name}}
+                                    </option>
+
+                                @endforeach
+                            </select>
+                            @error('supplier')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+
+
+                        <label for="cost" class="col-md-4 col-form-label ">Cost</label>
+                        <input id="cost" type="number" placeholder="Insert Cost..." step="0.01"
+                               class="form-control @error('cost') is-invalid @enderror"
+                               name="cost" value="{{ old('cost')??$product->cost }}"
+                               autocomplete="cost" autofocus>
+
+                        @error('cost')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
+
+
+
+
 
 
 

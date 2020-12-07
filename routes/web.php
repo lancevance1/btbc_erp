@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home.index');
 Route::get('/dashboard', 'DashboardController@show')->name('dashboard.show');
 Route::patch('/orders/reverse/{id}', 'OrderController@reverse');
+
 Route::delete('/orders/forceDelete/{id}', 'OrderController@forceDestroy');
 Route::get('/orders/export/{id}', 'OrderController@export');
 Route::get('/purchases/export/{id}', 'PurchaseController@export');
@@ -30,8 +31,12 @@ Route::get('/purchases/export/{id}', 'PurchaseController@export');
 Route::patch('/purchases/updateOrdered/{id}', 'PurchaseController@updateOrdered');
 Route::patch('/purchases/submitOrders/{id}', 'PurchaseController@submitOrders');
 
+Route::patch('/products/changeSupplier/{id}', 'ProductController@changeSupplier');
+
+
 Route::get('/orders/generatePurchase', 'OrderController@generatePurchase');
 Route::get('/orders/restorePurchase/{id}', 'OrderController@restorePurchase');
+Route::get('/puchases/inStock/{id}', 'PurchaseController@inStock');
 Route::get('/search', 'HomeController@testsearch');
 Route::resources([
     'orders' => 'OrderController',
@@ -41,6 +46,7 @@ Route::resources([
     'orders.pallets'=> 'PalletController',
     'purchases' => 'PurchaseController',
     'logbook' => 'LogbookController',
+    'products.deliveries' => 'DeliveryController',
     'suppliers' => 'SupplierController',
 ]);
 

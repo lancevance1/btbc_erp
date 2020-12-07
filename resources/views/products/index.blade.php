@@ -26,12 +26,13 @@
                                 <th>Code</th>
                                 <th>Description</th>
                                 <th>Price</th>
-                                <th>Cost</th>
+
                                 <th>Current Inventory</th>
                                 <th>Order Quantity</th>
                                 <th>To be ordered</th>
                                 <th>Current Inventory Value</th>
-                                <th>Belong to</th>
+                                <th>Suppliers</th>
+                                <th>Cost</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -44,13 +45,52 @@
                                     </td>
                                     <td>{{$product->description}}</td>
                                     <td>{{$product->price}}</td>
-                                    <td>{{$product->cost}}</td>
+
                                     <td>{{$product->current_inventory}}</td>
                                     <td>{{$product->order_quantity}}</td>
                                     <td>{{$product->to_be_ordered}}</td>
                                     <td>{{$product->cost*$product->current_inventory}}</td>
-                                    <td>{{$product->belong_to}}</td>
-                                    <td>{{$product->suppliers}}</td>
+
+                                    @foreach($product->suppliers as $tmp)
+                                        @if($tmp->pivot->isChosen == true)
+                                    <td> <form action="/products/changeSupplier/{{$product->id}}" method="POST">
+                                            <div class="form-group row"><select id="supplier"
+                                                class="form-control @error('supplier') is-invalid @enderror" name="supplier"
+                                        >
+
+                                            @foreach($product->suppliers as $sup)
+
+                                                @if($sup->pivot->isChosen == true)
+                                                    <option value='{{$sup->id}}'
+                                                            selected="selected">
+
+                                                        {{$sup->name}}
+                                                    </option>
+                                                @else
+                                                    <option value='{{$sup->id}}'
+                                                    >
+
+                                                        {{$sup->name}}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                            </select></div>
+
+
+
+                                            @csrf
+                                                @method('PATCH')
+                                            <button type="submit" class="btn btn-primary">Change</button>
+                                        </form>
+
+                                    </td>
+
+
+                                            <td>{{$tmp->pivot->price}}</td>
+
+                                        @endif
+
+                                    @endforeach
                                     <td> <button onclick="location.href='/products/{{ $product->id}}/edit'"
                                                  type="button" class="btn btn-secondary">Edit
                                         </button>

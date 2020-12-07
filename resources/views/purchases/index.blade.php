@@ -143,6 +143,7 @@
                                         <th>Code</th>
                                         <th>Description</th>
                                         <th>Price</th>
+                                        <th>Supplier</th>
                                         <th>Cost</th>
                                         <th>Current Inventory</th>
                                         <th>Expected order Quantity</th>
@@ -155,6 +156,8 @@
                                     </thead>
                                     <tbody>
                                     @foreach ($products ?? '' as $product)
+
+
                                         <tr>
                                             <td>{{$product->type}}
                                             </td>
@@ -162,7 +165,44 @@
                                             </td>
                                             <td>{{$product->description}}</td>
                                             <td>{{$product->price}}</td>
-                                            <td>{{$product->cost}}</td>
+                                            <td><form action="/products/changeSupplier/{{$product->id}}" method="POST">
+                                                    <div class="form-group row"><select id="supplier"
+                                                                                        class="form-control @error('supplier') is-invalid @enderror" name="supplier"
+                                                        >
+
+                                                            @foreach($product->suppliers as $sup)
+
+                                                                @if($sup->pivot->isChosen == true)
+                                                                    <option value='{{$sup->id}}'
+                                                                            selected="selected">
+
+                                                                        {{$sup->name}}
+                                                                    </option>
+                                                                @else
+                                                                    <option value='{{$sup->id}}'
+                                                                    >
+
+                                                                        {{$sup->name}}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select></div>
+
+
+
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-primary">Change</button>
+                                                </form>
+
+                                            </td>
+                                            <td>@foreach ($product->suppliers ?? '' as $sup)
+                                                @if($sup->pivot->isChosen)
+                                                {{$sup->pivot->price}}
+
+                                            @endif
+                                                @endforeach
+                                            </td>
                                             <td>{{$product->current_inventory}}</td>
                                             <td>{{$product->order_quantity}}</td>
                                             <td>
@@ -223,6 +263,106 @@
                                                 </button>
 
                                         </tr>
+
+                                        <tr>
+
+                                            <td colspan="6">
+                                                @if(sizeof($product->deliveries) != 0)
+                                                    <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                            data-target="#collapse-{{$product->id}}" aria-expanded="false"
+                                                            aria-controls="collapseExample">
+                                                        Logbooks
+                                                    </button>
+
+                                                @endif
+
+                                            </td>
+
+
+                                        </tr>
+
+                                        @if(sizeof($product->deliveries)!= 0)
+                                            <tr>
+
+
+                                                <td colspan="6">
+                                                    {{--                                            class="collapse show" cpllapse closed--}}
+                                                    <div class="collapse" id="collapse-{{$product->id}}">
+                                                        <div class="card card-body">
+
+
+                                                            <table class="table">
+
+                                                                <thead>
+                                                                <tr>
+<th></th>
+                                                                    <th>Id</th>
+                                                                    <th>Ordered Quantity</th>
+                                                                    <th>In stock</th>
+                                                                    <th>Created date</th>
+                                                                    <th>Updated date</th>
+
+                                                                </tr>
+
+                                                                </thead>
+
+
+                                                                <tbody>
+
+
+                                                                @foreach($product->deliveries->sortBy('updated_at')->reverse()->take(5) as $del)
+
+                                                                    <tr>
+
+                                                                        <td><input type="checkbox" name="{{$del->id}}"></td>
+                                                                        <td>
+                                                                            {{$del->id}}
+
+                                                                        </td>
+                                                                        <td>{{$del->change}}</td>
+                                                                        <td>{{$del->stock}}</td>
+                                                                        <td>{{$del->created_at}}</td>
+                                                                        <td>{{$del->updated_at}}</td>
+
+@if($del->change <>0)
+                                                                        <td>
+
+                                                                            <form action="{{action('PurchaseController@inStock',['id'=>$del->id])}}" method="GET">
+                                                                                @csrf
+
+                                                                                <button type="submit" class="btn btn-secondary">Complete {{$del->id}}</button>
+                                                                            </form>
+                                                                            @endif
+
+
+<td>
+    <form
+        action="products/{{$product->id}}/deliveries/{{$del->id}}"
+        method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-secondary">
+            Delete
+        </button>
+    </form>
+
+</td>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+
+                                            </tr>
+                                        @endif
+
                                     @endforeach
                                     </tbody>
                                 </table>

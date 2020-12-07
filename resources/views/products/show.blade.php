@@ -206,6 +206,57 @@
                                     </span>
                     @enderror
 
+                    <form action="/products/changeSupplier/{{$product->id}}" method="POST">
+                    <label for="supplier" class="col-form-label ">Supplier</label>
+                    <select id="supplier"
+                            class="form-control @error('supplier') is-invalid @enderror" name="supplier"
+                    >
+
+                        @foreach($product->suppliers as $sup)
+
+                            @if($sup->pivot->isChosen == true)
+                                <option value='{{$sup->id}}'
+                                        selected="selected">
+
+                                    {{$sup->name}}
+                                </option>
+                            @else
+                            <option value='{{$sup->id}}'
+                                    >
+
+                                {{$sup->name}}
+                            </option>
+                            @endif
+                        @endforeach
+                    </select>
+                    @error('supplier')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
+
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-primary">Change</button>
+                    </form>
+
+
+
+
+
+
+                    <label for="cost" class="col-md-4 col-form-label ">Cost</label>
+                    <input id="cost" type="number" placeholder="Insert Cost..." step="0.01"
+                           class="form-control @error('cost') is-invalid @enderror"
+                           name="cost" value="{{ old('cost')??$cost }}"
+                           autocomplete="cost" autofocus readonly>
+
+                    @error('cost')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
+
 
                 </div>
 

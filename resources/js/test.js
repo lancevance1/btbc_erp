@@ -1,15 +1,27 @@
+//
+// let str = 'aaa';
+// function clickValue(str) {
+//
+//
+//     console.log(str)
+//    this.str = str;
+// }
+//
+// function getStr() {
+//
+//
+//
+//     return this.str;
+// }
 
-let str = '';
-function clickValue(str) {
+$(function () {
+    $('.check').on('click', function () {
+        $('.questionCheckBox').prop('checked',true);
+    });
+});
 
-
-    console.log(str)
-   this.str = str;
-}
-
-function getStr() {
-
-
-
-    return this.str;
-}
+$(function () {
+    $('.uncheck').on('click', function () {
+        $('.questionCheckBox').prop('checked',false);
+    });
+});

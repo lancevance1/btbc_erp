@@ -17,15 +17,22 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Supplier')
             ->withTimestamps()
-            ->withPivot('price');;
+            ->withPivot('price','isChosen');;
     }
     public function logbooks()
     {
-        return $this->hasMany('App\Logbook');
+        return $this->belongsToMany('App\Logbook')
+            ->withTimestamps()
+            ->withPivot('change');
+    }
+
+    public function deliveries()
+    {
+        return $this->hasMany('App\Delivery');
     }
 
     protected $fillable = [
-        'code','price','description','type','size','cost','current_inventory','order_quantity',
+        'code','price','description','type','size','current_inventory','order_quantity',
         'to_be_ordered', 'current_inventory_value','belong_to',
     ];
 

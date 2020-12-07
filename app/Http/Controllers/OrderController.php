@@ -582,7 +582,11 @@ $tmp = $this->mergeRule($request);
                 foreach ($order->products as $prod) {
 
                     $prod->order_quantity += $prod->pivot->quantity;
+
                     $prod->to_be_ordered =$prod->order_quantity-$prod->current_inventory-$prod->ordered;
+                    if($prod->to_be_ordered<0){
+                        $prod->to_be_ordered=0;
+                    }
                     $prod->save();
                 }
             }
@@ -613,7 +617,7 @@ $purchase = Purchase::find($request->id);
                     foreach ($prod->logbooks as $logbook){
 
                         if($logbook != null){
-                            dd($logbook);
+//                            dd($logbook);
                             $logbook->delete();
 
                         }

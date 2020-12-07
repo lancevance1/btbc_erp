@@ -10,10 +10,11 @@ class Supplier extends Model
     {
         return $this->belongsToMany('App\Product')
             ->withTimestamps()
-            ->withPivot('price');
+            ->withPivot('price','isChosen');
     }
 
     protected $fillable = [
         'name',
+
     ];
 }

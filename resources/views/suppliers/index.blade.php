@@ -32,7 +32,7 @@
                                 <tr>
                                     <td>{{$sup->id}}
                                     </td>
-                                    <td>{{$sup->name}}
+                                    <td><a href="/suppliers/{{$sup->id}}">{{$sup->name}}</a>
                                     </td>
 
                                     <td><button onclick="location.href='/suppliers/{{ $sup->id}}/edit'"

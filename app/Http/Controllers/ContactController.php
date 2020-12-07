@@ -90,6 +90,7 @@ class ContactController extends Controller
     public function destroy(Customer $customer, Contact $contact)
     {
         try {
+//            dd($contact);
             $contact->delete();
             return \redirect('customers')->with('status','Successfully Deleted');
         } catch (\Exception $e) {

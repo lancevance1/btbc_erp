@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Dry Goods')
+@section('title', 'Delivery')
 
 
 @section('content')
@@ -30,7 +30,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($logbooks ?? '' as $tmp)
+                            @foreach ($del ?? '' as $tmp)
                                 @foreach ($tmp->products ?? '' as $prod)
                                 <tr>
                                     <td>{{$tmp->id}}
@@ -59,7 +59,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        {{ $logbooks->links() }}
+                        {{ $del->links() }}
                     </div>
                 </div>
             </div>

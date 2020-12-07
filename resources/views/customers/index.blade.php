@@ -75,7 +75,7 @@
                                 <tr>
                                     <td>{{$tmp->id}}</td>
                                     <td><a href="/customers/{{$tmp->id}}">{{$tmp->name}}</a>
-                                        </td>
+                                    </td>
                                     <td>{{$tmp->address}}</td>
 
 
@@ -106,84 +106,86 @@
 
                                 {{--do not render if there is no contact--}}
 
-                                    <tr>
+                                <tr>
 
-                                            <td colspan="6">
-                                                @if(sizeof($tmp->contacts) != 0)
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse-{{$tmp->id}}" aria-expanded="false" aria-controls="collapseExample">
-                                                    Contacts
-                                                </button>
-                                                @endif
-                                                <button onclick="location.href='/customers/{{ $tmp->id}}/contacts/create'"
-                                                        type="button" class="btn btn-secondary">Create Contact
-                                                </button>
-                                            </td>
+                                    <td colspan="6">
+                                        @if(sizeof($tmp->contacts) != 0)
+                                            <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                    data-target="#collapse-{{$tmp->id}}" aria-expanded="false"
+                                                    aria-controls="collapseExample">
+                                                Contacts
+                                            </button>
+                                        @endif
+                                        <button onclick="location.href='/customers/{{ $tmp->id}}/contacts/create'"
+                                                type="button" class="btn btn-secondary">Create Contact
+                                        </button>
+                                    </td>
 
 
-
-                                    </tr>
+                                </tr>
                                 @if(sizeof($tmp->contacts) != 0)
                                     <tr>
 
 
                                         <td colspan="6">
-{{--                                            class="collapse show" cpllapse closed--}}
+                                            {{--                                            class="collapse show" cpllapse closed--}}
                                             <div class="collapse" id="collapse-{{$tmp->id}}">
-                                            <div class="card card-body">
+                                                <div class="card card-body">
 
 
+                                                    <table class="table">
 
-                                            <table class="table">
+                                                        <thead>
+                                                        <tr>
 
-                                                <thead>
-                                                <tr>
+                                                            <th>Contact Name</th>
+                                                            <th>Email</th>
+                                                            <th>Phone Number</th>
+                                                            <th>Fax</th>
 
-                                                    <th>Contact Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone Number</th>
-                                                    <th>Fax</th>
+                                                        </tr>
 
-                                                </tr>
-
-                                                </thead>
-
-
-                                                <tbody>
+                                                        </thead>
 
 
-                                                @foreach($tmp->contacts as $contact)
+                                                        <tbody>
 
-                                                    <tr>
-                                                        <td><a href="/customers/{{ $tmp->id}}/contacts/{{$contact->id}}">{{$contact->name}}</a>
 
-                                                            </td>
-                                                        <td>{{$contact->email}}</td>
-                                                        <td>{{$contact->phone}}</td>
-                                                        <td>{{$contact->fax}}</td>
+                                                        @foreach($tmp->contacts as $contact)
 
-                                                        <td>
+                                                            <tr>
+                                                                <td>
+                                                                    <a href="/customers/{{ $tmp->id}}/contacts/{{$contact->id}}">{{$contact->name}}</a>
 
-                                                            <button
-                                                                onclick="location.href='/customers/{{ $tmp->id}}/contacts/{{$contact->id}}/edit'"
-                                                                type="button" class="btn btn-secondary">Edit
-                                                            </button>
+                                                                </td>
+                                                                <td>{{$contact->email}}</td>
+                                                                <td>{{$contact->phone}}</td>
+                                                                <td>{{$contact->fax}}</td>
 
-                                                            <form
-                                                                action="/customers/{{$tmp->id}}/contacts/{{$contact->id}}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-secondary">Delete
-                                                                </button>
-                                                            </form>
+                                                                <td>
 
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                                    <button
+                                                                        onclick="location.href='/customers/{{ $tmp->id}}/contacts/{{$contact->id}}/edit'"
+                                                                        type="button" class="btn btn-secondary">Edit
+                                                                    </button>
 
-                                                </tbody>
-                                            </table>
-                                            </div>
+                                                                    <form
+                                                                        action="/customers/{{$tmp->id}}/contacts/{{$contact->id}}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="btn btn-secondary">
+                                                                            Delete
+                                                                        </button>
+                                                                    </form>
+
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </td>
 

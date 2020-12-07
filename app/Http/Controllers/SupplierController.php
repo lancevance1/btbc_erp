@@ -34,17 +34,17 @@ class SupplierController extends Controller
         return redirect('suppliers/')->with('status','New supplier created');
     }
 
-//    public function show(Customer $customer)
-//    {
-//        return view('customers.show',[
-//            'customer' => $customer,
-//        ]);
-//    }
-//
-//    public function edit(Customer $customer)
-//    {
-//        return view('customers.edit', compact('customer'));
-//    }
+    public function show(Supplier $supplier)
+    {
+        return view('suppliers.show',[
+            'supplier' => $supplier,
+        ]);
+    }
+
+    public function edit(Supplier $supplier)
+    {
+        return view('suppliers.edit', compact('supplier'));
+    }
 //
 //    public function update(Request $request, Customer $customer)
 //    {
