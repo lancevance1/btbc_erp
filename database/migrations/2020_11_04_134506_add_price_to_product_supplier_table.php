@@ -15,6 +15,7 @@ class AddPriceToProductSupplierTable extends Migration
     {
         Schema::table('product_supplier', function (Blueprint $table) {
             $table->decimal('price',19,2)->nullable();
+            $table->boolean('isChosen')->default(false);
         });
     }
 
@@ -27,6 +28,7 @@ class AddPriceToProductSupplierTable extends Migration
     {
         Schema::table('product_supplier', function (Blueprint $table) {
             $table->dropColumn('price');
+            $table->dropColumn('isChosen');
         });
     }
 }
