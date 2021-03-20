@@ -46,35 +46,30 @@ class SupplierController extends Controller
         return view('suppliers.edit', compact('supplier'));
     }
 //
-//    public function update(Request $request, Customer $customer)
-//    {
-//        $data = $request->validate([
-//            'name' => 'required',
-//            'address' => '',
-//        ]);
-//        try {
-//            $customer->update($data);
-//        }catch (\Exception $e) {
-//            echo $e;
-//            //report($e);;
-//        }
-//        //return view('customers.show');
-//        return redirect('customers/')->with('status','Customer modified');
-//    }
+    public function update(Request $request, Supplier $supplier)
+    {
+        $data = $request->validate([
+            'name' => 'required',
+
+        ]);
+        try {
+            $supplier->update($data);
+        }catch (\Exception $e) {
+            echo $e;
+            //report($e);;
+        }
+        //return view('customers.show');
+        return redirect('suppliers/')->with('status','supplier modified');
+    }
 //
-//    public function destroy(Customer $customer)
-//    {
-//        try {
-//            $customer->contacts()->delete();
-//            foreach ($customer->orders as $tmp){
-//                $tmp->customer_id = null;
-//
-//                $tmp->save();
-//            }
-//            $customer->delete();
-//            return \redirect('customers')->with('status','Successfully Deleted');
-//        } catch (\Exception $e) {
-//            echo $e;
-//        }
-//    }
+    public function destroy(Supplier $supplier)
+    {
+        try {
+            $supplier->delete();
+
+            return \redirect('suppliers')->with('status','Successfully Deleted');
+        } catch (\Exception $e) {
+            echo $e;
+        }
+    }
 }

@@ -35,9 +35,10 @@
                                     <td><a href="/suppliers/{{$sup->id}}">{{$sup->name}}</a>
                                     </td>
 
-                                    <td><button onclick="location.href='/suppliers/{{ $sup->id}}/edit'"
-                                                type="button" class="btn btn-secondary">Add Price
-                                        </button>
+                                    <td>
+{{--                                        <button onclick="location.href='/suppliers/{{ $sup->id}}/edit'"--}}
+{{--                                                type="button" class="btn btn-secondary">Add Price--}}
+{{--                                        </button>--}}
                                         <button onclick="location.href='/suppliers/{{ $sup->id}}/edit'"
                                                  type="button" class="btn btn-secondary">Edit
                                         </button>

@@ -50,8 +50,16 @@ class ProductController extends Controller
             'belong_to' => '',
 
         ]);
+        try {
+            Product::create($data);
+        } catch(\Illuminate\Database\QueryException $e){
+            $errorCode = $e->errorInfo[1];
+            if($errorCode == '1062'){
+                //dd('Duplicate Entry');
+                return Redirect::back()->with('error', 'Duplicate Entry');
+            }
+        }
 
-        Product::create($data);
 
         return redirect('products/')->with('status','New dry good created');
     }

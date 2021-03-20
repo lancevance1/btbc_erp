@@ -4,7 +4,9 @@
 @section('content')
     <div class="container">
 
-
+        <form action="/suppliers/{{$supplier->id}}" enctype="multipart/form-data" method="post">
+            @csrf
+            @method('PATCH')
         <div class="row">
             <div class="col-8 offset-2">
                 <div class="row">
@@ -76,6 +78,10 @@
                                     </span>
                     @enderror
 
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                    </div>
+
 
 
 
@@ -92,6 +98,6 @@
             </div>
         </div>
 
-
+        </form>
     </div>
 @endsection

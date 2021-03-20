@@ -32,7 +32,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col">
-                            <label for="customer_id" class=" col-form-label ">Customer</label>
+                            <label for="customer_id" class=" col-form-label ">Customer *</label>
 
                             <select id="customer_id"
                                     class="form-control @error('customer_id') is-invalid @enderror" name="customer_id">

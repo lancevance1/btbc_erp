@@ -24,7 +24,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/dashboard') }}" >
+                <a class="navbar-brand" href="{{ url('/orders') }}" >
                     <div><img src="{{ URL::to('/') }}/svg/wine.svg" alt="wine icon" width="25" height="25" >
                     {{ config('app.name', 'Laravel') }}</div>
                 </a>
@@ -37,9 +37,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/dashboard">Dashboard </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="/orders">Orders (BAF)</a>
                         </li>
@@ -52,9 +50,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/purchases">Purchase Orders</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logbook">Logbook</a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="/suppliers">Suppliers</a>
                         </li>

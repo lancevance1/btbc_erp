@@ -58,11 +58,8 @@ class OrderController extends Controller
             'baf_number' => '',
 
 
-
         ];
     }
-
-
 
 
     public function index()
@@ -70,17 +67,17 @@ class OrderController extends Controller
 
         $total_orders = Order::whereNull('deleted_at')->count();
 
-        $orders = Order::whereNull('deleted_at')->where('isPurchase',0)->orderBy('updated_at', 'DESC')->paginate(15);
+        $orders = Order::whereNull('deleted_at')->where('isPurchase', 0)->orderBy('updated_at', 'DESC')->paginate(15);
 //        foreach ($orders as $tmp){
 //            $tmp->customer_id = 2;
 //            $tmp->save();
 //        }
 
-$purchases = Purchase::orderBy('updated_at', 'DESC')->paginate(15);
+        $purchases = Purchase::orderBy('updated_at', 'DESC')->paginate(15);
 
-        $orders_purchase = Order::whereNull('deleted_at')->where('isPurchase',1)->orderBy('updated_at', 'DESC')->paginate(15);
+        $orders_purchase = Order::whereNull('deleted_at')->where('isPurchase', 1)->orderBy('updated_at', 'DESC')->paginate(15);
         $orders_soft_deleted = Order::onlyTrashed()->get();
-        return view('orders.index', compact('orders', 'total_orders', 'orders_soft_deleted','orders_purchase','purchases'));
+        return view('orders.index', compact('orders', 'total_orders', 'orders_soft_deleted', 'orders_purchase', 'purchases'));
     }
 
     public function create(Request $request)
@@ -225,7 +222,7 @@ $purchases = Purchase::orderBy('updated_at', 'DESC')->paginate(15);
     {
 
         //$validator = Validator::make($request->all(), $this->rules);
-$tmp = $this->mergeRule($request);
+        $tmp = $this->mergeRule($request);
 
         //process the request
         $data = $request->validate($tmp);
@@ -276,7 +273,6 @@ $tmp = $this->mergeRule($request);
         return redirect('orders/')->with('status', 'order updated');
 
 
-
     }
 
     /**
@@ -287,8 +283,19 @@ $tmp = $this->mergeRule($request);
      */
     public function destroy(Order $order)
     {
+//dd($order->id);
+        $purchase = Purchase::find($order->purchase_id);
+//dd($order->purchases()->id);
+//        dd($purchase->orders()->count());
+
 
         try {
+            if ($purchase->orders()->count() == 1) {
+                $order->purchases()->delete();
+            }
+            $order->isPurchase = false;
+            $order->purchase_id = null;
+            $order->save();
             $order->delete();
             return \redirect('orders/')->with('status', 'Successfully Deleted');
         } catch (\Exception $e) {
@@ -342,201 +349,193 @@ $tmp = $this->mergeRule($request);
     {
 
         try {
-        $log = '';
-        //return Excel::download(new OrderExport(), 'order.xlsx');
+            $log = '';
+            //return Excel::download(new OrderExport(), 'order.xlsx');
 
-        //get data
-        $orders = Order::withoutTrashed()->where('id', $request->id)->get();
-
-
-        //load spreadsheet
-        $spreadsheet = IOFactory::load("template.xlsx");
-        $sheet = $spreadsheet->getActiveSheet();
-
-        $order = $orders->first();
-        $wine = $order->products->where('type', 'wine')->first();
-        $bottle = $order->products->where('type', 'bottle')->first();
-        $cork = $order->products->where('type', 'cork')->first();
-        $capsule = $order->products->where('type', 'capsule')->first();
-        $screw_cap = $order->products->where('type', 'screw cap')->first();
-        $carton = $order->products->where('type', 'carton')->first();
-        $divider = $order->products->where('type', 'divider')->first();
-        $pallet = $order->products->where('type', 'pallet')->first();
+            //get data
+            $orders = Order::withoutTrashed()->where('id', $request->id)->get();
 
 
-        // manipulate cells
-            $contacts =[];
-            if(isset($order->customers)){  $contacts = $order->customers->contacts;
+            //load spreadsheet
+            $spreadsheet = IOFactory::load("template.xlsx");
+            $sheet = $spreadsheet->getActiveSheet();
+
+            $order = $orders->first();
+            $wine = $order->products->where('type', 'wine')->first();
+            $bottle = $order->products->where('type', 'bottle')->first();
+            $cork = $order->products->where('type', 'cork')->first();
+            $capsule = $order->products->where('type', 'capsule')->first();
+            $screw_cap = $order->products->where('type', 'screw cap')->first();
+            $carton = $order->products->where('type', 'carton')->first();
+            $divider = $order->products->where('type', 'divider')->first();
+            $pallet = $order->products->where('type', 'pallet')->first();
+
+
+            // manipulate cells
+            $contacts = [];
+            if (isset($order->customers)) {
+                $contacts = $order->customers->contacts;
                 $sheet->setCellValue('C6', $order->customers->name);
-                $sheet->setCellValue('C8', $order->customers->address);}
+                $sheet->setCellValue('C8', $order->customers->address);
+            }
 
-        $specs = $order->pallets;
-        $str = 'C';
-        $str1 = 'I';
+            $specs = $order->pallets;
+            $str = 'C';
+            $str1 = 'I';
 
-        //dd($specs);
-        for ($i = 0; $i < sizeof($contacts); $i++) {
-            $cell_name = $str . '7';
-            $cell_email = $str . '9';
-            $cell_phone = $str1 . '8';
-            $cell_fax = $str1 . '9';
-            //dd($contacts[$i]->name);
-            $sheet->setCellValue($cell_name, $contacts[$i]->name);
-            $sheet->setCellValue($cell_email, $contacts[$i]->email);
-            $sheet->setCellValue($cell_phone, $contacts[$i]->phone);
-            $sheet->setCellValue($cell_fax, $contacts[$i]->fax);
-            $str++;
-            $str++;
-            $str1++;
-            $str1++;
-            //dd($str);
-        }
+            //dd($specs);
+            for ($i = 0; $i < sizeof($contacts); $i++) {
+                $cell_name = $str . '7';
+                $cell_email = $str . '9';
+                $cell_phone = $str1 . '8';
+                $cell_fax = $str1 . '9';
+                //dd($contacts[$i]->name);
+                $sheet->setCellValue($cell_name, $contacts[$i]->name);
+                $sheet->setCellValue($cell_email, $contacts[$i]->email);
+                $sheet->setCellValue($cell_phone, $contacts[$i]->phone);
+                $sheet->setCellValue($cell_fax, $contacts[$i]->fax);
+                $str++;
+                $str++;
+                $str1++;
+                $str1++;
+                //dd($str);
+            }
 
-        $str = 'C';
-        for ($i = 0; $i < sizeof($specs); $i++) {
-            $cell_cartons_per_layer = $str . '49';
-            $cell_layers_per_pallet = $str . '50';
-            $cell_cartons_per_pallet = $str . '51';
-            $sheet->setCellValue($cell_cartons_per_layer, $specs[$i]->cartons_per_layer);
-            $sheet->setCellValue($cell_layers_per_pallet, $specs[$i]->layers_per_pallet);
-            $sheet->setCellValue($cell_cartons_per_pallet, $specs[$i]->cartons_per_layer * $specs[$i]->layers_per_pallet);
-            $str++;
-        }
-
-
-
-        $sheet->setCellValue('H5', $order->run_number);
-        $sheet->setCellValue('I11', $order->order_number);
-
-        $sheet->setCellValue('C14', $order->cases_required);
-        $sheet->setCellValue('C15', $order->samples_required);
-        $sheet->setCellValue('C22', $order->do2);
-        $sheet->setCellValue('C23', $order->additives);
-        $sheet->setCellValue('H14', $order->pack_size);
-        $sheet->setCellValue('F19', $order->alc_on_label);
-        $sheet->setCellValue('F20', $order->alc_in_tank);
-        $sheet->setCellValue('F21', $order->turbidity);
-        $sheet->setCellValue('I15', date_format(date_create($order->required_by), "d/m/Y"));
-        $sheet->setCellValue('I16', date_format(date_create($order->delivered_by), "d/m/Y"));
-        $sheet->setCellValue('C40', $order->carton_labels);
-        $sheet->setCellValue('C41', $order->bottle_print);
-        $sheet->setCellValue('D42', $order->neck);
-        $sheet->setCellValue('D43', $order->front);
-        $sheet->setCellValue('D44', $order->back);
-        $sheet->setCellValue('F15', $order->run_length);
-        $sheet->setCellValue('C52', $order->slip_sheets);
-        $sheet->setCellValue('C53', $order->card_board);
-        $sheet->setCellValue('C54', $order->stretch_wrap);
-        $sheet->setCellValue('C55', $order->cont_size);
-        $sheet->setCellValue('J4', $order->baf_number);
-
-        if ($order->bottles_direction === 'upright') {
-            $sheet->setCellValue('I48', 'X');
-        } elseif ($order->bottles_direction === 'inverted') {
-            $sheet->setCellValue('I49', 'X');
-        } else {
-            $sheet->setCellValue('I50', 'X');
-        }
-
-        if ($order->bottles_direction === 'upright') {
-            $sheet->setCellValue('I52', 'X');
-        } else {
-            $sheet->setCellValue('I53', 'X');
-        }
-
-        if ($order->coa) {
-            $sheet->setCellValue('F17', 'YES');
-        } else {
-            $sheet->setCellValue('F17', 'NO');
-        }
-        if ($order->lip) {
-            $sheet->setCellValue('F18', 'YES');
-        } else {
-            $sheet->setCellValue('F18', 'NO');
-        }
-
-        if ($order->slip_sheet) {
-            $sheet->setCellValue('C52', 'YES');
-        } else {
-            $sheet->setCellValue('C52', 'NO');
-        }
-
-        if ($order->card_board) {
-            $sheet->setCellValue('C53', 'YES');
-        } else {
-            $sheet->setCellValue('C53', 'NO');
-        }
-
-        if ($order->carton_labels) {
-            $sheet->setCellValue('C40', 'YES');
-        } else {
-            $sheet->setCellValue('C40', 'NO');
-        }
-
-        if (isset($wine)) {
-            $sheet->setCellValue('C11', $wine->code);
-            $sheet->setCellValue('C20', $wine->code);
-            $sheet->setCellValue('C21', $wine->description);
-        }
-
-        if (isset($bottle)) {
-            $sheet->setCellValue('C30', $bottle->code);
-            $sheet->setCellValue('D30', $bottle->description);
-            $sheet->setCellValue('H30', $bottle->pivot->quantity);
-            $sheet->setCellValue('I30', $bottle->pivot->quantity_external);
-        }
-        if (isset($cork)) {
-            $sheet->setCellValue('C31', $cork->code);
-            $sheet->setCellValue('D31', $cork->description);
-            $sheet->setCellValue('H31', $cork->pivot->quantity);
-            $sheet->setCellValue('I31', $cork->pivot->quantity_external);
-        }
-
-        if (isset($capsule)) {
-            $sheet->setCellValue('C32', $capsule->code);
-            $sheet->setCellValue('D32', $capsule->description);
-            $sheet->setCellValue('H32', $capsule->pivot->quantity);
-            $sheet->setCellValue('I32', $capsule->pivot->quantity_external);
-        }
-
-        if (isset($screw_cap)) {
-            $sheet->setCellValue('C33', $screw_cap->code);
-            $sheet->setCellValue('D33', $screw_cap->description);
-            $sheet->setCellValue('H33', $screw_cap->pivot->quantity);
-            $sheet->setCellValue('I33', $screw_cap->pivot->quantity_external);
-        }
-
-        if (isset($carton)) {
-            $sheet->setCellValue('C35', $carton->code);
-            $sheet->setCellValue('D35', $carton->description);
-            $sheet->setCellValue('H35', $carton->pivot->quantity);
-            $sheet->setCellValue('I35', $carton->pivot->quantity_external);
-        }
-
-        if (isset($divider)) {
-            $sheet->setCellValue('C36', $divider->code);
-            $sheet->setCellValue('D36', $divider->description);
-            $sheet->setCellValue('H36', $divider->pivot->quantity);
-            $sheet->setCellValue('I36', $divider->pivot->quantity_external);
-        }
-
-        if (isset($pallet)) {
-            $sheet->setCellValue('C48', $pallet->code);
-        }
+            $str = 'C';
+            for ($i = 0; $i < sizeof($specs); $i++) {
+                $cell_cartons_per_layer = $str . '49';
+                $cell_layers_per_pallet = $str . '50';
+                $cell_cartons_per_pallet = $str . '51';
+                $sheet->setCellValue($cell_cartons_per_layer, $specs[$i]->cartons_per_layer);
+                $sheet->setCellValue($cell_layers_per_pallet, $specs[$i]->layers_per_pallet);
+                $sheet->setCellValue($cell_cartons_per_pallet, $specs[$i]->cartons_per_layer * $specs[$i]->layers_per_pallet);
+                $str++;
+            }
 
 
-        //$sheet->setCellValue('', $pallet->descrition);
+            $sheet->setCellValue('H5', $order->run_number);
+            $sheet->setCellValue('I11', $order->order_number);
 
-        //dd($bottle->pivot->quantity);
+            $sheet->setCellValue('C14', $order->cases_required);
+            $sheet->setCellValue('C15', $order->samples_required);
+            $sheet->setCellValue('C22', $order->do2);
+            $sheet->setCellValue('C23', $order->additives);
+            $sheet->setCellValue('H14', $order->pack_size);
+            $sheet->setCellValue('F19', $order->alc_on_label);
+            $sheet->setCellValue('F20', $order->alc_in_tank);
+            $sheet->setCellValue('F21', $order->turbidity);
+            $sheet->setCellValue('I15', date_format(date_create($order->required_by), "d/m/Y"));
+            $sheet->setCellValue('I16', date_format(date_create($order->delivered_by), "d/m/Y"));
+            $sheet->setCellValue('C40', $order->carton_labels);
+            $sheet->setCellValue('C41', $order->bottle_print);
+            $sheet->setCellValue('D42', $order->neck);
+            $sheet->setCellValue('D43', $order->front);
+            $sheet->setCellValue('D44', $order->back);
+            $sheet->setCellValue('F15', $order->run_length);
+            $sheet->setCellValue('C52', $order->slip_sheets);
+            $sheet->setCellValue('C53', $order->card_board);
+            $sheet->setCellValue('C54', $order->stretch_wrap);
+            $sheet->setCellValue('C55', $order->cont_size);
+            $sheet->setCellValue('J4', $order->baf_number);
 
+            if ($order->bottles_direction === 'upright') {
+                $sheet->setCellValue('I48', 'X');
+            } elseif ($order->bottles_direction === 'inverted') {
+                $sheet->setCellValue('I49', 'X');
+            } else {
+                $sheet->setCellValue('I50', 'X');
+            }
 
-        //$sheet->setCellValue('I37', $bottle->pivot->quantity);
+            if ($order->bottles_direction === 'upright') {
+                $sheet->setCellValue('I52', 'X');
+            } else {
+                $sheet->setCellValue('I53', 'X');
+            }
 
-        // create a file name
-        $fileName = 'BAF_' . 'BAXXX' . '_' . $order->run_number . '_' . $order->order_number . '_' . $order->wine_code . '.xlsx';
+            if ($order->coa) {
+                $sheet->setCellValue('F17', 'YES');
+            } else {
+                $sheet->setCellValue('F17', 'NO');
+            }
+            if ($order->lip) {
+                $sheet->setCellValue('F18', 'YES');
+            } else {
+                $sheet->setCellValue('F18', 'NO');
+            }
 
-        // create a new spreadsheet
-        $writer = new Xlsx($spreadsheet);
+            if ($order->slip_sheet) {
+                $sheet->setCellValue('C52', 'YES');
+            } else {
+                $sheet->setCellValue('C52', 'NO');
+            }
+
+            if ($order->card_board) {
+                $sheet->setCellValue('C53', 'YES');
+            } else {
+                $sheet->setCellValue('C53', 'NO');
+            }
+
+            if ($order->carton_labels) {
+                $sheet->setCellValue('C40', 'YES');
+            } else {
+                $sheet->setCellValue('C40', 'NO');
+            }
+
+            if (isset($wine)) {
+                $sheet->setCellValue('C11', $wine->code);
+                $sheet->setCellValue('C20', $wine->code);
+                $sheet->setCellValue('C21', $wine->description);
+            }
+
+            if (isset($bottle)) {
+                $sheet->setCellValue('C30', $bottle->code);
+                $sheet->setCellValue('D30', $bottle->description);
+                $sheet->setCellValue('H30', $bottle->pivot->quantity);
+                $sheet->setCellValue('I30', $bottle->pivot->quantity_external);
+            }
+            if (isset($cork)) {
+                $sheet->setCellValue('C31', $cork->code);
+                $sheet->setCellValue('D31', $cork->description);
+                $sheet->setCellValue('H31', $cork->pivot->quantity);
+                $sheet->setCellValue('I31', $cork->pivot->quantity_external);
+            }
+
+            if (isset($capsule)) {
+                $sheet->setCellValue('C32', $capsule->code);
+                $sheet->setCellValue('D32', $capsule->description);
+                $sheet->setCellValue('H32', $capsule->pivot->quantity);
+                $sheet->setCellValue('I32', $capsule->pivot->quantity_external);
+            }
+
+            if (isset($screw_cap)) {
+                $sheet->setCellValue('C33', $screw_cap->code);
+                $sheet->setCellValue('D33', $screw_cap->description);
+                $sheet->setCellValue('H33', $screw_cap->pivot->quantity);
+                $sheet->setCellValue('I33', $screw_cap->pivot->quantity_external);
+            }
+
+            if (isset($carton)) {
+                $sheet->setCellValue('C35', $carton->code);
+                $sheet->setCellValue('D35', $carton->description);
+                $sheet->setCellValue('H35', $carton->pivot->quantity);
+                $sheet->setCellValue('I35', $carton->pivot->quantity_external);
+            }
+
+            if (isset($divider)) {
+                $sheet->setCellValue('C36', $divider->code);
+                $sheet->setCellValue('D36', $divider->description);
+                $sheet->setCellValue('H36', $divider->pivot->quantity);
+                $sheet->setCellValue('I36', $divider->pivot->quantity_external);
+            }
+
+            if (isset($pallet)) {
+                $sheet->setCellValue('C48', $pallet->code);
+            }
+
+            $fileName = 'BAF_' . $order->baf_number . '_' . $order->run_number . '_' . $order->order_number . '_' . $order->wine_code . '.xlsx';
+
+            // create a new spreadsheet
+            $writer = new Xlsx($spreadsheet);
 
             $writer->save($fileName);
         } catch (\Exception $e) {
@@ -558,90 +557,84 @@ $tmp = $this->mergeRule($request);
 //        dd($orders[1]);
         $data = $request->all();
 //        dd(sizeof($data));
-        if(sizeof($data) >1){
+        if (sizeof($data) > 1) {
             $purchase = Purchase::create();
 
 
-        while ($value = current($data)) {
-            if ($value == 'on') {
+            while ($value = current($data)) {
+                if ($value == 'on') {
 
-                $order = Order::find(key($data));
+                    $order = Order::find(key($data));
 //                dd($purchase->id);
-                $order->purchase_id=$purchase->id;
-                $order->isPurchase = true;
-                $order->save();
+                    $order->purchase_id = $purchase->id;
+                    $order->isPurchase = true;
+                    $order->save();
+                }
+                next($data);
             }
-            next($data);
-        }
 
-        $purchases = Purchase::orderBy('updated_at', 'DESC')->paginate(15);
-        foreach ($purchases as $purchase) {
+            $purchases = Purchase::orderBy('updated_at', 'DESC')->paginate(15);
+            foreach ($purchases as $purchase) {
 
-            foreach ($purchase->orders as $order) {
+                foreach ($purchase->orders as $order) {
 
-                foreach ($order->products as $prod) {
+                    foreach ($order->products as $prod) {
 
-                    $prod->order_quantity += $prod->pivot->quantity;
+                        $prod->order_quantity += $prod->pivot->quantity;
 
-                    $prod->to_be_ordered =$prod->order_quantity-$prod->current_inventory-$prod->ordered;
-                    if($prod->to_be_ordered<0){
-                        $prod->to_be_ordered=0;
+                        $prod->to_be_ordered = $prod->order_quantity - $prod->current_inventory - $prod->ordered;
+                        if ($prod->to_be_ordered < 0) {
+                            $prod->to_be_ordered = 0;
+                        }
+                        $prod->save();
                     }
-                    $prod->save();
                 }
             }
-        }
 
 
-        return redirect('orders/')->with('status', 'purchase created');
-        }else{
+            return redirect('orders/')->with('status', 'purchase created');
+        } else {
             return redirect('orders/')->with('status', 'pls select orders');
         }
 
 
     }
 
-    public function restorePurchase(Request $request){
+    public function restorePurchase(Request $request)
+    {
 //        $purchase = Purchase::all();
 //        foreach ($purchase as $tmp){
 //            $tmp->delete();
 //        }
 //dd($request->id);
-$purchase = Purchase::find($request->id);
-
-
-            foreach ($purchase->orders as $order) {
-
-                foreach ($order->products as $prod) {
-
-                    foreach ($prod->logbooks as $logbook){
-
-                        if($logbook != null){
+        $purchase = Purchase::find($request->id);
+        foreach ($purchase->orders as $order) {
+            foreach ($order->products as $prod) {
+                foreach ($prod->logbooks as $logbook) {
+                    if ($logbook != null) {
 //                            dd($logbook);
-                            $logbook->delete();
-
-                        }
+                        $logbook->delete();
 
                     }
-
-                    $prod->order_quantity =0;
-                    $prod->ordered = 0;
-                    $prod->save();
-
-
                 }
+                $prod->order_quantity = 0;
+                $prod->ordered = 0;
+                $prod->save();
+
+
             }
+        }
 
 
 //        $orders = Order::whereNull('deleted_at')->where('isPurchase',1)->orderBy('updated_at', 'DESC')->paginate(15);
-        foreach ($purchase->orders as $tmp){
-            $tmp->isPurchase=false;
+        foreach ($purchase->orders as $tmp) {
+            $tmp->isPurchase = false;
 //            $purchase = Purchase::find($tmp->purchase_id);
-            if($purchase != null){
+            if ($purchase != null) {
                 $purchase->delete();
             }
 
-            $tmp->purchase_id=null;
+            $tmp->purchase_id = null;
             $tmp->save();
         }
 
@@ -652,33 +645,33 @@ $purchase = Purchase::find($request->id);
 
     public function mergeRule($request)
     {
-        $tmp=[
+        $tmp = [
             'wine' => 'required',
-            'bottle' => Rule::requiredIf($request->quantity_bottle!=null or $request->quantity_bottle_external!=null ),
-            'cork' => Rule::requiredIf($request->quantity_cork!=null or $request->quantity_cork_external!=null ),
-            'capsule' => Rule::requiredIf($request->quantity_capsule!=null or $request->quantity_capsule_external!=null ),
-            'screw_cap' =>Rule::requiredIf($request->quantity_screw_cap!=null or $request->quantity_screw_cap_external!=null ),
-            'carton' => Rule::requiredIf($request->quantity_carton!=null or $request->quantity_carton_external!=null ),
-            'divider' => Rule::requiredIf($request->quantity_divider!=null or $request->quantity_divider_external!=null ),
+            'bottle' => Rule::requiredIf($request->quantity_bottle != null or $request->quantity_bottle_external != null),
+            'cork' => Rule::requiredIf($request->quantity_cork != null or $request->quantity_cork_external != null),
+            'capsule' => Rule::requiredIf($request->quantity_capsule != null or $request->quantity_capsule_external != null),
+            'screw_cap' => Rule::requiredIf($request->quantity_screw_cap != null or $request->quantity_screw_cap_external != null),
+            'carton' => Rule::requiredIf($request->quantity_carton != null or $request->quantity_carton_external != null),
+            'divider' => Rule::requiredIf($request->quantity_divider != null or $request->quantity_divider_external != null),
             'pallet' => 'required',
 
-            'quantity_wine' => Rule::requiredIf($request->wine!=null and $request->quantity_wine_external==null ),
-            'quantity_bottle' => Rule::requiredIf($request->bottle!=null and $request->quantity_bottle_external==null ),
-            'quantity_cork' => Rule::requiredIf($request->cork!=null and $request->quantity_cork_external==null ),
-            'quantity_capsule' => Rule::requiredIf($request->capsule!=null and $request->quantity_capsule_external==null ),
-            'quantity_screw_cap' => Rule::requiredIf($request->srew_cap!=null and $request->quantity_screw_cap_external==null ),
-            'quantity_carton' => Rule::requiredIf($request->carton!=null and $request->quantity_carton_external==null ),
-            'quantity_divider' => Rule::requiredIf($request->divider!=null and $request->quantity_divider_external==null ),
+            'quantity_wine' => Rule::requiredIf($request->wine != null and $request->quantity_wine_external == null),
+            'quantity_bottle' => Rule::requiredIf($request->bottle != null and $request->quantity_bottle_external == null),
+            'quantity_cork' => Rule::requiredIf($request->cork != null and $request->quantity_cork_external == null),
+            'quantity_capsule' => Rule::requiredIf($request->capsule != null and $request->quantity_capsule_external == null),
+            'quantity_screw_cap' => Rule::requiredIf($request->srew_cap != null and $request->quantity_screw_cap_external == null),
+            'quantity_carton' => Rule::requiredIf($request->carton != null and $request->quantity_carton_external == null),
+            'quantity_divider' => Rule::requiredIf($request->divider != null and $request->quantity_divider_external == null),
 
-            'quantity_wine_external' => Rule::requiredIf($request->wine!=null and $request->quantity_wine==null ),
-            'quantity_bottle_external' => Rule::requiredIf($request->bottle!=null and $request->quantity_bottle==null ),
-            'quantity_cork_external' => Rule::requiredIf($request->cork!=null and $request->quantity_cork==null ),
-            'quantity_capsule_external' => Rule::requiredIf($request->capsule!=null and $request->quantity_capsule==null ),
-            'quantity_screw_cap_external' => Rule::requiredIf($request->screw_cap!=null and $request->quantity_screw_cap==null ),
-            'quantity_carton_external' => Rule::requiredIf($request->carton!=null and $request->quantity_carton==null ),
-            'quantity_divider_external' => Rule::requiredIf($request->divider!=null and $request->quantity_divider==null ),
+            'quantity_wine_external' => Rule::requiredIf($request->wine != null and $request->quantity_wine == null),
+            'quantity_bottle_external' => Rule::requiredIf($request->bottle != null and $request->quantity_bottle == null),
+            'quantity_cork_external' => Rule::requiredIf($request->cork != null and $request->quantity_cork == null),
+            'quantity_capsule_external' => Rule::requiredIf($request->capsule != null and $request->quantity_capsule == null),
+            'quantity_screw_cap_external' => Rule::requiredIf($request->screw_cap != null and $request->quantity_screw_cap == null),
+            'quantity_carton_external' => Rule::requiredIf($request->carton != null and $request->quantity_carton == null),
+            'quantity_divider_external' => Rule::requiredIf($request->divider != null and $request->quantity_divider == null),
         ];
-        $tmp = array_merge ($tmp,$this->rules);
+        $tmp = array_merge($tmp, $this->rules);
         return $tmp;
     }
 }

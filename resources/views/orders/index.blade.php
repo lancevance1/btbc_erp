@@ -7,8 +7,8 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        Welcome {{$user->name ?? ''}} <br/>
-                        <a href="/orders/create">new order</a>
+                         {{$user->name ?? ''}} <br/>
+                        <a href="/orders/create">new BAF</a>
                         Total Orders: {{$total_orders ?? ''}}
 
                         {{--                        <a href="/orders/generatePurchase">generate purchase</a>--}}
@@ -27,10 +27,13 @@
                         @endif
 
 @if(sizeof($orders)!=0)
-                        <form action="/orders/generatePurchase" method="GET">
-                            @csrf
+                        <form action="{{action('OrderController@generatePurchase')}}"
+                              method="get">
 
-                            <button type="submit" class="btn btn-secondary">generate purchase order</button>
+                            @csrf
+                            <button type="submit" class="btn btn-secondary">new Purchase order</button>
+
+
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
@@ -67,17 +70,22 @@
                                                 <button onclick="location.href='/orders/{{ $order->id}}/edit'"
                                                         type="button" class="btn btn-secondary">Edit
                                                 </button>
-                                                <form action="/orders/export/{{$order->id}}" method="GET">
-                                                    @csrf
+                                                <button onclick="location.href='/orders/export/{{ $order->id}}'"
+                                                        type="button" class="btn btn-secondary">Export
+                                                </button>
+{{--                                                <form  action="{{action('OrderController@export',['id'=>$order->id])}}"--}}
+{{--                                                       method="get">--}}
+{{--                                                    @csrf--}}
 
-                                                    <button type="submit" class="btn btn-secondary">Export</button>
-                                                </form>
+{{--                                                    <button type="submit" class="btn btn-secondary">Export</button>--}}
+{{--                                                </form>--}}
+{{--                                                <form action="/orders/export/{{$order->id}}" method="GET">--}}
+{{--                                                    @csrf--}}
 
-                                                <form action="/orders/{{$order->id}}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-secondary">Delete</button>
-                                                </form>
+{{--                                                    <button type="submit" class="btn btn-secondary">Export</button>--}}
+{{--                                                </form>--}}
+
+
 
 
                                             </td>
@@ -106,8 +114,8 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </form>
+
 @endif
 {{--                        @foreach ($orders_purchase ?? '' as $tmp)--}}
 {{--                            <div>--}}

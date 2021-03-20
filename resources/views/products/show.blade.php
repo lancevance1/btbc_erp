@@ -261,6 +261,108 @@
                 </div>
 
 
+                <tr>
+
+                    <td colspan="6">
+                        @if(sizeof($product->deliveries) != 0)
+                            <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                    data-target="#collapse-{{$product->id}}" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                Logbooks
+                            </button>
+
+                        @endif
+
+                    </td>
+
+
+                </tr>
+{{--                {{dd($product->deliveries)}}--}}
+                @if(sizeof($product->deliveries)!= 0)
+                    <tr>
+
+
+                        <td colspan="6">
+                            {{--                                            class="collapse show" cpllapse closed--}}
+                            <div class="collapse" id="collapse-{{$product->id}}">
+                                <div class="card card-body">
+
+
+                                    <table class="table">
+
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Id</th>
+                                            <th>Ordered Quantity</th>
+                                            <th>In stock</th>
+                                            <th>Created date</th>
+                                            <th>Updated date</th>
+
+                                        </tr>
+
+                                        </thead>
+
+
+                                        <tbody>
+
+
+                                        @foreach($product->deliveries->sortBy('updated_at')->reverse()->take(5) as $del)
+
+                                            <tr>
+
+                                                <td><input type="checkbox" name="{{$del->id}}"></td>
+                                                <td>
+                                                    {{$del->id}}
+
+                                                </td>
+                                                <td>{{$del->change}}</td>
+                                                <td>{{$del->stock}}</td>
+                                                <td>{{$del->created_at}}</td>
+                                                <td>{{$del->updated_at}}</td>
+
+                                                @if($del->change <>0)
+                                                    <td>
+
+                                                        <form
+                                                            action="{{action('PurchaseController@inStock',['id'=>$del->id])}}"
+                                                            method="GET">
+                                                            @csrf
+
+                                                            <button type="submit"
+                                                                    class="btn btn-secondary">
+                                                                Complete {{$del->id}}</button>
+                                                        </form>
+                                                @endif
+
+
+                                                <td>
+                                                    <form
+                                                        action="products/{{$product->id}}/deliveries/{{$del->id}}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                                class="btn btn-secondary">
+                                                            Delete
+                                                        </button>
+                                                    </form>
+                                                </td>
+
+
+                                            </tr>
+                                        @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+
+                    </tr>
+                @endif
+
             </div>
         </div>
 
