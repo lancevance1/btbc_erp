@@ -30,6 +30,7 @@ Route::get('/purchases/export/{id}', 'PurchaseController@export');
 
 Route::patch('/purchases/updateOrdered/{id}', 'PurchaseController@updateOrdered');
 Route::patch('/purchases/submitOrders/{id}', 'PurchaseController@submitOrders');
+Route::patch('/purchases/completeOrders/{id}', 'PurchaseController@completeOrders');
 
 Route::patch('/products/changeSupplier/{id}', 'ProductController@changeSupplier');
 
