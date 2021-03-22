@@ -115,12 +115,10 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $str = '';
-
         $tmp = $this->mergeRule($request);
 
         //process the request
         $data = $request->validate($tmp);
-        //dd($data);
         try {
             $order = Order::create($data);
 //            $order->customer_id = $data['customer'];
@@ -152,7 +150,6 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         // get dynamic options
-
         $wines = $order->products->where('type', 'wine');
         $bottles = $order->products->where('type', 'bottle');
         $corks = $order->products->where('type', 'cork');
@@ -197,14 +194,10 @@ class OrderController extends Controller
 
         $customers = Customer::all();
         $current_customer = $order->customers;
-//        dd($current_customer->id);
-
         $current_wine = $order->products->where('type', 'wine')->first();
         $current_bottle = $order->products->where('type', 'bottle')->first();
         $current_cork = $order->products->where('type', 'cork')->first();
-//        dd($current_cork->id);
         $current_capsule = $order->products->where('type', 'capsule')->first();
-//        dd($current_capsule->id);
         $current_screw_cap = $order->products->where('type', 'screw cap')->first();
         $current_carton = $order->products->where('type', 'carton')->first();
         $current_divider = $order->products->where('type', 'divider')->first();
@@ -226,25 +219,19 @@ class OrderController extends Controller
 
         //process the request
         $data = $request->validate($tmp);
-        //dd($data);
         $order->update($data);
         $order->baf_number = strtoupper($data['baf_number']);
         $order->save();
         $arr = array();
         $arr1 = array();
-        //dd($data);
         isset($data['wine']) ? array_push($arr, $data['wine']) : null;
-
         isset($data['bottle']) ? array_push($arr, $data['bottle']) : null;
-        //dd($data_bottle);
         isset($data['cork']) ? array_push($arr, $data['cork']) : null;
         isset($data['capsule']) ? array_push($arr, $data['capsule']) : null;
         isset($data['screw_cap']) ? array_push($arr, $data['screw_cap']) : null;
         isset($data['carton']) ? array_push($arr, $data['carton']) : null;
         isset($data['divider']) ? array_push($arr, $data['divider']) : null;
         isset($data['pallet']) ? array_push($arr, $data['pallet']) : null;
-        //dd($data['bottle']);
-//dd($arr);
         $order->products()->sync($arr);
         if (isset($data['wine'])) {
             $order->products()->updateExistingPivot($data['wine'], ['quantity' => $data['quantity_wine'], 'quantity_external' => $data['quantity_wine_external']]);
@@ -283,11 +270,8 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-//dd($order->id);
-        $purchase = Purchase::find($order->purchase_id);
-//dd($order->purchases()->id);
-//        dd($purchase->orders()->count());
 
+        $purchase = Purchase::find($order->purchase_id);
 
         try {
             if ($purchase->orders()->count() == 1) {
@@ -350,7 +334,7 @@ class OrderController extends Controller
 
         try {
             $log = '';
-            //return Excel::download(new OrderExport(), 'order.xlsx');
+//            return Excel::download(new OrderExport($request), 'order.xlsx');
 
             //get data
             $orders = Order::withoutTrashed()->where('id', $request->id)->get();
@@ -538,6 +522,9 @@ class OrderController extends Controller
             $writer = new Xlsx($spreadsheet);
 
             $writer->save($fileName);
+
+
+
         } catch (\Exception $e) {
             $log = $e->getMessage();
         }
@@ -554,9 +541,7 @@ class OrderController extends Controller
     public function generatePurchase(Request $request)
     {
         $orders = Order::whereNull('deleted_at')->orderBy('updated_at', 'DESC')->paginate(15);
-//        dd($orders[1]);
         $data = $request->all();
-//        dd(sizeof($data));
         if (sizeof($data) > 1) {
             $purchase = Purchase::create();
 
@@ -565,7 +550,6 @@ class OrderController extends Controller
                 if ($value == 'on') {
 
                     $order = Order::find(key($data));
-//                dd($purchase->id);
                     $order->purchase_id = $purchase->id;
                     $order->isPurchase = true;
                     $order->save();
@@ -606,7 +590,6 @@ class OrderController extends Controller
 //        foreach ($purchase as $tmp){
 //            $tmp->delete();
 //        }
-//dd($request->id);
         $purchase = Purchase::find($request->id);
         foreach ($purchase->orders as $order) {
             foreach ($order->products as $prod) {
@@ -624,7 +607,6 @@ class OrderController extends Controller
 
             }
         }
-
 
 //        $orders = Order::whereNull('deleted_at')->where('isPurchase',1)->orderBy('updated_at', 'DESC')->paginate(15);
         foreach ($purchase->orders as $tmp) {

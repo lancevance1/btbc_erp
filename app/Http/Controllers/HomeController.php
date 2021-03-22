@@ -25,7 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return redirect('dashboard/');
+        return redirect('orders/');
 //        $tmp = Order::create(['order number'=>'aaa123']);
 //        $prod = Product::create(['code'=>'122']);
 //        $tmp->save();
@@ -47,12 +47,9 @@ class HomeController extends Controller
 
     public function testsearch(Request $request)
     {
-
-
         //dd($request->all());
         $searchTerm = $request->input('q');
         //dd($searchTerm);
-
 
         if($searchTerm != ""){
             $orders = Order::where ( 'order_number', 'LIKE', '%' . $searchTerm . '%' )
@@ -64,12 +61,9 @@ class HomeController extends Controller
             $count = count ( $orders )+count ( $products );
             if (count ( $orders ) > 0 || count ( $products ) > 0)
                 return view('search', compact('orders','products','count'));
-
             else
-
-                return back()->with ( 'status','No Details found. Try to search again !' );
+                return view('search', compact('orders','products','count'))->with ( 'status','No Details found. Try to search again !' );
         }
-
-        return back()->with ( 'status','No Details found. Try to search again !' );
+        return view('search',compact('orders','products','count'))->with ( 'status','No Details found. Try to search again !' );
     }
 }

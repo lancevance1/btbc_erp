@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="/products/create">Create a dry good</a>
+                        <a href="/products/create">Create new dry good</a>
                     </div>
                     <div class="card-body">
                         @if (session('status'))

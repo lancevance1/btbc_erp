@@ -74,7 +74,7 @@
                         </div>
 
                         <div class="col">
-                            <label for="order_number" class=" col-form-label ">Order No.</label>
+                            <label for="order_number" class=" col-form-label ">Order No. *</label>
                             <input id="order_number" type="text"
                                    class="form-control @error('order_number') is-invalid @enderror"
                                    name="order_number" value="{{ old('order_number') }}"
@@ -89,7 +89,7 @@
 
 
                         <div class="col">
-                            <label for="run_number" class="col-form-label ">Run No.</label>
+                            <label for="run_number" class="col-form-label ">Run No. *</label>
                             <input id="run_number" type="number"
                                    class="form-control @error('run_number') is-invalid @enderror"
                                    name="run_number" value="{{ old('run_number') }}"
@@ -107,7 +107,7 @@
                     <div class="form-group row">
 
                         <div class="col">
-                            <label for="cases_required" class=" col-form-label ">Cases Required</label>
+                            <label for="cases_required" class=" col-form-label ">Cases Required *</label>
                             <input id="cases_required" type="number"
                                    class="form-control @error('cases_required') is-invalid @enderror"
                                    name="cases_required" value="{{ old('cases_required') }}"
@@ -120,7 +120,7 @@
                             @enderror
                         </div>
                         <div class="col">
-                            <label for="samples_required" class=" col-form-label ">Samples Required</label>
+                            <label for="samples_required" class=" col-form-label ">Samples Required *</label>
                             <input id="samples_required" type="number"
                                    class="form-control @error('samples_required') is-invalid @enderror"
                                    name="samples_required" value="{{ old('samples_required') ??0}}"
@@ -133,7 +133,7 @@
                             @enderror
                         </div>
                         <div class="col">
-                            <label for="pack_size" class=" col-form-label ">Pack Size (750ml)</label>
+                            <label for="pack_size" class=" col-form-label ">Pack Size (750ml) *</label>
                             <input id="pack_size" type="number"
                                    class="form-control @error('pack_size') is-invalid @enderror"
                                    name="pack_size" value="{{ old('pack_size')?? 6 }}"
@@ -186,7 +186,7 @@
 
 
                         <div class="col">
-                            <label for="COA" class="col-form-label ">COA</label>
+                            <label for="COA" class="col-form-label ">COA *</label>
                             <select id="COA"
                                     class="form-control" name="COA">
 
@@ -200,7 +200,7 @@
                         </div>
 
                         <div class="col">
-                            <label for="LIP" class=" col-form-label ">LIP</label>
+                            <label for="LIP" class=" col-form-label ">LIP *</label>
                             <select id="LIP"
                                     class="form-control" name="LIP">
 
@@ -624,7 +624,7 @@
                                     </span>
                             @enderror
                         </div>
-                    </div>la
+                    </div>
                     <div class="form-group row">
                         <div class="form-group col-md-6">
                             <label for="divider" class=" col-form-label ">Divider</label>
@@ -770,7 +770,7 @@
                     <div class="form-group row">
                         <div class="col">
                             <label for="bottles_direction" class="col-form-label ">Bottles
-                                Direction</label>
+                                Direction *</label>
                             <select id="bottles_direction"
                                     class="form-control" name="bottles_direction">
 
@@ -792,7 +792,7 @@
                         </div>
                         <div class="col">
 
-                            <label for="cartons_direction" class="col-form-label ">Carton Direction</label>
+                            <label for="cartons_direction" class="col-form-label ">Carton Direction *</label>
                             <select id="cartons_direction"
                                     class="form-control" name="cartons_direction">
 

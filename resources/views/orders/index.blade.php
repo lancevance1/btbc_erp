@@ -7,9 +7,10 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                         {{$user->name ?? ''}} <br/>
-                        <a href="/orders/create">new BAF</a>
+{{--                        {{$user->name ?? ''}} <br/>--}}
+
                         Total Orders: {{$total_orders ?? ''}}
+                        <a href="/orders/create">Create new BAF</a>
 
                         {{--                        <a href="/orders/generatePurchase">generate purchase</a>--}}
                     </div>
@@ -26,117 +27,115 @@
                             </div>
                         @endif
 
-@if(sizeof($orders)!=0)
-                        <form action="{{action('OrderController@generatePurchase')}}"
-                              method="get">
+                        @if(sizeof($orders)!=0)
+                            <form action="{{action('OrderController@generatePurchase')}}"
+                                  method="get">
 
-                            @csrf
-                            <button type="submit" class="btn btn-secondary">new Purchase order</button>
+                                @csrf
+                                <button type="submit" class="btn btn-secondary">new Purchase order</button>
 
 
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>BAF</th>
-                                        <th>Order Number</th>
-                                        <th>Wine Code</th>
-                                        <th>Run Number</th>
-                                        <th>Created at</th>
-                                        <th>Updated at</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($orders ?? '' as $order)
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
                                         <tr>
-                                            <td><input type="checkbox" name="{{$order->id}}"></td>
-                                            <td><a href="/orders/{{$order->id}}">{{$order->baf_number}}</a></td>
-                                            <td><a href="/orders/{{$order->id}}">{{$order->order_number}}</a></td>
-                                            <td>{{$order->products->where("type","wine")->first()->code??null}}</td>
-                                            <td>{{$order->run_number}}</td>
-
-                                            <td>{{$order->created_at}}</td>
-                                            <td>{{$order->updated_at}}</td>
-
-                                            <td>
-                                                {{--                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"--}}
-                                                {{--                                                type="button" class="btn btn-secondary">Create Pallets Specs--}}
-                                                {{--                                        </button>--}}
-                                                {{--                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets'"--}}
-                                                {{--                                                type="button" class="btn btn-secondary">Show Pallets Specs--}}
-                                                {{--                                        </button>--}}
-
-                                                <button onclick="location.href='/orders/{{ $order->id}}/edit'"
-                                                        type="button" class="btn btn-secondary">Edit
-                                                </button>
-                                                <button onclick="location.href='/orders/export/{{ $order->id}}'"
-                                                        type="button" class="btn btn-secondary">Export
-                                                </button>
-{{--                                                <form  action="{{action('OrderController@export',['id'=>$order->id])}}"--}}
-{{--                                                       method="get">--}}
-{{--                                                    @csrf--}}
-
-{{--                                                    <button type="submit" class="btn btn-secondary">Export</button>--}}
-{{--                                                </form>--}}
-{{--                                                <form action="/orders/export/{{$order->id}}" method="GET">--}}
-{{--                                                    @csrf--}}
-
-{{--                                                    <button type="submit" class="btn btn-secondary">Export</button>--}}
-{{--                                                </form>--}}
-
-
-
-
-                                            </td>
-                                            {{--                                        <a href="/orders/{{$order->id}}">--}}
-
-
-
-                                            {{--                                            <p>Order Number: {{ $order->order_number }}--}}
-                                            {{--                                                Wine Code: {{ $order->wine_code }}--}}
-                                            {{--                                                Run Number: {{ $order->run_number }}--}}
-                                            {{--                                                Created at: {{ $order->created_at }}--}}
-                                            {{--                                                Updated at: {{ $order->updated_at }}--}}
-                                            {{--                                                --}}{{--{{dd($order->customers->name)}}--}}
-                                            {{--                                                Customer Name: {{$order->customers->name ?? null}}--}}
-
-                                            {{--                                                @foreach($order->products as $product)--}}
-                                            {{--                                                    {{ $product->type }}: {{ $product->code }}--}}
-                                            {{--                                                    Quantity: {{$product->pivot->quantity}}--}}
-                                            {{--                                                @endforeach--}}
-                                            {{--                                            </p>--}}
-                                            {{--                                            <br/>--}}
-                                            {{--                                        </a>--}}
+                                            <th></th>
+                                            <th>BAF</th>
+                                            <th>Order Number</th>
+                                            <th>Wine Code</th>
+                                            <th>Run Number</th>
+                                            <th>Created at</th>
+                                            <th>Updated at</th>
                                         </tr>
-                                    @endforeach
+                                        </thead>
+                                        <tbody>
+                                        @foreach ($orders ?? '' as $order)
+                                            <tr>
+                                                <td><input type="checkbox" name="{{$order->id}}"></td>
+                                                <td><a href="/orders/{{$order->id}}">{{$order->baf_number}}</a></td>
+                                                <td><a href="/orders/{{$order->id}}">{{$order->order_number}}</a></td>
+                                                <td>{{$order->products->where("type","wine")->first()->code??null}}</td>
+                                                <td>{{$order->run_number}}</td>
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </form>
+                                                <td>{{$order->created_at}}</td>
+                                                <td>{{$order->updated_at}}</td>
 
-@endif
-{{--                        @foreach ($orders_purchase ?? '' as $tmp)--}}
-{{--                            <div>--}}
-{{--                                {{$tmp->id}}--}}
-{{--                                {{$tmp->order_number}}--}}
-{{--                                {{$tmp->run_number}}--}}
-{{--                                {{$tmp->baf_number}}--}}
-{{--                            </div>--}}
+                                                <td>
+                                                    {{--                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets/create'"--}}
+                                                    {{--                                                type="button" class="btn btn-secondary">Create Pallets Specs--}}
+                                                    {{--                                        </button>--}}
+                                                    {{--                                        <button onclick="location.href='/orders/{{ $order->id}}/pallets'"--}}
+                                                    {{--                                                type="button" class="btn btn-secondary">Show Pallets Specs--}}
+                                                    {{--                                        </button>--}}
 
-{{--                                <form action="/orders/restorePurchase" method="GET">--}}
-{{--                                    @csrf--}}
-{{--                                    <button type="submit" class="btn btn-secondary">restore</button>--}}
-{{--                                </form>--}}
+                                                    <button onclick="location.href='/orders/{{ $order->id}}/edit'"
+                                                            type="button" class="btn btn-secondary">Edit
+                                                    </button>
+                                                    <button onclick="location.href='/orders/export/{{ $order->id}}'"
+                                                            type="button" class="btn btn-secondary">Export
+                                                    </button>
+                                                    {{--                                                <form  action="{{action('OrderController@export',['id'=>$order->id])}}"--}}
+                                                    {{--                                                       method="get">--}}
+                                                    {{--                                                    @csrf--}}
+
+                                                    {{--                                                    <button type="submit" class="btn btn-secondary">Export</button>--}}
+                                                    {{--                                                </form>--}}
+                                                    {{--                                                <form action="/orders/export/{{$order->id}}" method="GET">--}}
+                                                    {{--                                                    @csrf--}}
+
+                                                    {{--                                                    <button type="submit" class="btn btn-secondary">Export</button>--}}
+                                                    {{--                                                </form>--}}
 
 
-{{--                        @endforeach--}}
+                                                </td>
+                                                {{--                                        <a href="/orders/{{$order->id}}">--}}
 
-{{--                           --}}
 
-                            @if(sizeof($purchases)!=0)
-                                <div> <h3>Archive</h3></div>
+
+                                                {{--                                            <p>Order Number: {{ $order->order_number }}--}}
+                                                {{--                                                Wine Code: {{ $order->wine_code }}--}}
+                                                {{--                                                Run Number: {{ $order->run_number }}--}}
+                                                {{--                                                Created at: {{ $order->created_at }}--}}
+                                                {{--                                                Updated at: {{ $order->updated_at }}--}}
+                                                {{--                                                --}}{{--{{dd($order->customers->name)}}--}}
+                                                {{--                                                Customer Name: {{$order->customers->name ?? null}}--}}
+
+                                                {{--                                                @foreach($order->products as $product)--}}
+                                                {{--                                                    {{ $product->type }}: {{ $product->code }}--}}
+                                                {{--                                                    Quantity: {{$product->pivot->quantity}}--}}
+                                                {{--                                                @endforeach--}}
+                                                {{--                                            </p>--}}
+                                                {{--                                            <br/>--}}
+                                                {{--                                        </a>--}}
+                                            </tr>
+                                        @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+
+                        @endif
+                        {{--                        @foreach ($orders_purchase ?? '' as $tmp)--}}
+                        {{--                            <div>--}}
+                        {{--                                {{$tmp->id}}--}}
+                        {{--                                {{$tmp->order_number}}--}}
+                        {{--                                {{$tmp->run_number}}--}}
+                        {{--                                {{$tmp->baf_number}}--}}
+                        {{--                            </div>--}}
+
+                        {{--                                <form action="/orders/restorePurchase" method="GET">--}}
+                        {{--                                    @csrf--}}
+                        {{--                                    <button type="submit" class="btn btn-secondary">restore</button>--}}
+                        {{--                                </form>--}}
+
+
+                        {{--                        @endforeach--}}
+
+                        {{--                           --}}
+
+                        @if(sizeof($purchases)!=0)
+                            <div><h3>Archive</h3></div>
                             @foreach ($purchases ?? '' as $tmp)
 
                                 <div class="table-responsive ">
@@ -223,7 +222,7 @@
 
                             @endforeach
 
-@endif
+                        @endif
 
 
 

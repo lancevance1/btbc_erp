@@ -8,8 +8,8 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        Welcome {{$user->name ?? ''}} <br/>
-                        <a href="/customers/create">create customer</a>
+
+                        <a href="/customers/create">Create customer</a>
 
                     </div>
 
